@@ -27,6 +27,7 @@
     "joi": "^11.3.4",
     "mongoose": "^4.12.1",
     "mongoose-type-mail": "^1.0.0",
+    "path": "^0.12.7",
     "vision": "^4.1.1"
   }
 }

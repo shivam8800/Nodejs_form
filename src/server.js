@@ -6,7 +6,8 @@ import Vision from 'vision';
 const server = new Hapi.Server();
 
 server.connection({
-	port: 8080
+	port: 8080,
+	routes: { cors: true }
 });
 
 server.route(routes);
@@ -24,6 +25,8 @@ server.register([
 			server.log(['start'], 'hapi-swagger interface loaded')
 		}
 	});
+
+server.log('info', 'View configuration completed')
 
 server.start(err=>{
 	if (err){

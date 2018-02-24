@@ -3,12 +3,13 @@ var FormModel = require('../models/form');
 const Joi = require('joi');
 
 
+
 const routes =[
 	{
 	method: 'GET',
-	path: '/hello',
+	path: '/',
 	handler: (request, reply) =>{
-		reply("Hello world I am here");
+			reply("Hello world");
 		}
 	},
 	{
@@ -58,7 +59,7 @@ const routes =[
 		handler: (request, reply) =>{
 			//create a mongodb form object	to save it into database
 			var form = new FormModel(request.payload);
-			
+
 			//call save method to save it and pass call back method to handel a error
 			form.save(function(err){
 				if (err){

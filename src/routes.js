@@ -52,7 +52,8 @@ const routes =[
 			validate: {
 				payload: {
 					name: Joi.string().required(),
-					email: Joi.string().required()
+					email: Joi.string().required(),
+					audiosrc: Joi.string().required()
 				}
 			}
 		},

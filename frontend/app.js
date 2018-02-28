@@ -1,26 +1,33 @@
-$(document).ready(function(){ 
-   $('#submit').click(function(){
-
-        var formModel = {}
-        var name = $('#name').val();
-        var email = $('#email').val();
-        var audio = $('#audio').attr('src');
-
-        formModel.name = name;
-        formModel.email = email;
-        formModel.audiosrc = audio;
+$(document).ready(function(){
+   $('#show').click(function(){
+        $('#showdetails').modal({
+            show: 'true'
+        });
 
 
-        $.ajax({
-                url : "http://127.0.0.1:8080/api/form",
-                type : "POST",
-                data : formModel,
-                success : function(json){
-                    location.reload();
-                },
-                error : function(err){
-                    alert(err);
-                }
-            });
-   })
+        $('#showpage').click(function(){
+
+            var emailid = $('#emailid').val();
+            if (emailid != ""){
+
+                $.ajax({
+                    url: 'http://localhost:8080/get/user/'+ emailid,
+                    type: 'GET',
+                    success: function(result) {
+                        window.localStorage.setItem('name', result['data']['0']['name']);
+                        window.localStorage.setItem('email', emailid);
+                        window.location = "show.html";
+                    },
+                    error : function(err){
+                        alert(err);
+                        console.log(err);
+                    }
+                });
+            } else {
+                alert("please put user emailid so that we can give you that user details")
+            }
+        });
+
+
+   });
 });

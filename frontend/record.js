@@ -11,10 +11,12 @@
 // URL.createObjectURL -> to create a URL from a blob, which we can use as audio src
 
 var recordButton, stopButton, recorder;
+  var recordedChunks = [];
 
 window.onload = function () {
   recordButton = document.getElementById('record');
   stopButton = document.getElementById('stop');
+
 
   // get audio stream from user's mic
   navigator.mediaDevices.getUserMedia({
@@ -26,6 +28,15 @@ window.onload = function () {
     stopButton.addEventListener('click', stopRecording);
     recorder = new MediaRecorder(stream);
 
+    recorder.ondataavailable = handleDataAvailable;
+
+    function handleDataAvailable(event) {
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+      } else {
+        console.log("j");
+      }
+    }
     // listen to dataavailable, which gets triggered whenever we have
     // an audio blob available
     recorder.addEventListener('dataavailable', onRecordingReady);
@@ -53,3 +64,67 @@ function onRecordingReady(e) {
   audio.src = URL.createObjectURL(e.data);
   audio.play();
 }
+
+var file;
+
+function download() {
+  var blob = new Blob(recordedChunks, {
+    type: 'audio/webm'
+  });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  document.body.appendChild(a);
+  a.style = 'display: none';
+  a.href = url;
+  a.download = 'audio.mp3';
+  // a.click();
+  window.URL.revokeObjectURL(url);
+  file = new File([blob], $('#email').val()+ '.mp3', {type: 'audio/webm', lastModified: Date.now()});
+}
+
+
+$('#submit').click(function(){
+
+    var formModel = {}
+    var name = $('#name').val();
+    var email = $('#email').val();
+
+    formModel.name = name;
+    formModel.email = email;
+
+    $.ajax({
+            url : "http://127.0.0.1:8080/post/userdetails",
+            type : "POST",
+            data : formModel,
+            success : function(json){
+                location.reload();
+                console.log(formModel)
+           },
+            error : function(err){
+                alert(err);
+            }
+        });
+
+    download();
+    var audioFile = file;
+    var form = new FormData();
+    form.append("file", audioFile);
+      $.ajax({
+          url : "http://127.0.0.1:8080/audio",
+          type : "POST",
+          data : form,
+          processData: false,
+          contentType: false,
+          mimeType: "multipart/form-data",
+          success : function(json) {
+              console.log("yeah got it!")
+              console.log(json);
+          },
+          error: function(err){
+              alert(err);
+              console.log(err);
+          }
+      });
+
+
+   });

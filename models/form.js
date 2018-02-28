@@ -6,8 +6,7 @@ var Schema = mongoose.Schema;
 
 var FormSchema = new Schema({
 	name: String,
-	email:{type:Email, required:true, unique:true},
-	audiosrc: String
+	email:{type:Email, required:true, unique:true}
 });
 
 const Form = mongoose.model('Form', FormSchema)

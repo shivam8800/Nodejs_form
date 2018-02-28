@@ -2,6 +2,8 @@ const db = require('../database').db;
 var FormModel = require('../models/form');
 const Joi = require('joi');
 
+import fs from 'fs'
+var path = require('path');
 
 
 const routes =[
@@ -14,7 +16,7 @@ const routes =[
 	},
 	{
 		method: 'GET',
-		path: '/api/forms',
+		path: '/get/alluser',
 		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
@@ -42,7 +44,7 @@ const routes =[
 	},
 	{
 		method: 'POST',
-		path: '/api/form',
+		path: '/post/userdetails',
 		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
@@ -53,7 +55,6 @@ const routes =[
 				payload: {
 					name: Joi.string().required(),
 					email: Joi.string().required(),
-					audiosrc: Joi.string().required()
 				}
 			}
 		},
@@ -61,9 +62,12 @@ const routes =[
 			//create a mongodb form object	to save it into database
 			var form = new FormModel(request.payload);
 
+			console.log(request.payload);
+
 			//call save method to save it and pass call back method to handel a error
 			form.save(function(err){
 				if (err){
+					// console.log(err)
 					reply({
 						statusCode: 503,
 						message: err
@@ -75,6 +79,106 @@ const routes =[
 					});
 				}
 			})
+		}
+	},
+	{
+
+	    method: 'POST',
+	    path: '/audio',
+	    config: {
+	    	//Include this api in swagger documentation
+			tags: ['api'],
+			description: 'upload audio file',
+			notes: 'upload audio file',
+
+	        payload: {
+	            output: 'stream',
+	            parse: true,
+	            allow: 'multipart/form-data'
+	        },
+
+	        handler: function (request, reply) {
+	            var data = request.payload;
+	            if (data.file) {
+	                var name = data.file.hapi.filename;
+	                var path = __dirname + "/uploads/" + name;
+	                var file = fs.createWriteStream(path);
+
+	                file.on('error', function (err) { 
+	                    console.error(err)
+	                });
+
+	                data.file.pipe(file);
+
+	                data.file.on('end', function (err) { 
+	                    var ret = {
+	                        filename: data.file.hapi.filename,
+	                        headers: data.file.hapi.headers
+	                    }
+	                    reply(JSON.stringify(ret));
+	                })
+	            }
+
+	        }
+	    }
+	},
+	{
+		method: 'GET',
+		path: '/get/user/{emailid}',
+		config: {
+			//include this api in swagger documentation
+			tags: ['api'],
+			description: 'get a particular user details',
+			notes: 'get a particular user details',
+			//we use joi plugin to validate the request
+			validate: {
+				params: {
+					emailid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+			FormModel.find({"email":request.params.emailid}, function(err, data){
+    			// console.log('dslfkjlkds');
+    			if (err) {
+    				reply({
+    					statusCode: 503,
+    					message: 'no metch found',
+    					data: err
+    				});
+    			}
+    			else{
+    				reply({
+    					statusCode: 200,
+    					message: "your complaint has been found results are here.",
+    					data: data
+    				});
+    			}
+    		});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/userfile/{emailid}',
+		config: {
+			//include this api in swagger documentation
+			tags: ['api'],
+			description: 'get file of particular user',
+			notes: 'get file of particular user',
+			//we use joi plugin to validate the request
+			validate: {
+				params: {
+					emailid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+			var file = path.join(__dirname + "/uploads/", request.params.emailid + ".mp3");
+
+			fs.readFile(file , function (err,data){
+                return reply(data)
+                .header('Content-disposition', 'attachment; filename=' + request.params.emailid + ".mp3")
+            });
 		}
 	}
 ]

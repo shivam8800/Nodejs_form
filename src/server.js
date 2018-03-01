@@ -2,8 +2,18 @@ import Hapi from 'hapi';
 import routes from './routes'
 import Inert from 'inert';
 import Vision from 'vision';
+var Path = require('path');
 
-const server = new Hapi.Server();
+const server = new Hapi.Server({
+    connections: {
+        routes: {
+            files: {
+                relativeTo: Path.join(__dirname, 'frontend')
+            }
+        }
+    }
+});
+
 
 server.connection({
 	port: 8080,
@@ -28,6 +38,24 @@ server.register([
 
 server.log('info', 'View configuration completed')
 
+server.register(require('inert'), (err) => {
+
+    if (err) {
+        throw err;
+    }
+
+    server.route({
+	    method: 'GET',
+	    path: '/{filename}',
+	    handler: {
+	        file: function (request) {
+	            return request.params.filename;
+	        }
+	    }
+	});
+});
+
+
 server.start(err=>{
 	if (err){
 		console.log("Error was handed!");
@@ -35,4 +63,4 @@ server.start(err=>{
 	}
 
 	console.log('Server started at', server.info.uri);
-})
+});

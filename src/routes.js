@@ -5,6 +5,9 @@ const Joi = require('joi');
 import fs from 'fs'
 var path = require('path');
 
+var cool = require('cool-ascii-faces');
+
+
 
 const routes =[
 	{
@@ -12,6 +15,13 @@ const routes =[
 	path: '/',
 	handler: (request, reply) =>{
 			reply.file("./index.html");
+		}
+	},
+	{
+		method: 'GET',
+		path: '/cool',
+		handler: (request, reply) =>{
+			reply(cool());
 		}
 	},
 	{

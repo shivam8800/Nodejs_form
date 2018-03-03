@@ -93,7 +93,7 @@ $('#submit').click(function(){
     formModel.email = email;
 
     $.ajax({
-            url : "http://127.0.0.1:8080/post/userdetails",
+            url : "https://complain-form.herokuapp.com/post/userdetails",
             type : "POST",
             data : formModel,
             success : function(json){
@@ -110,7 +110,7 @@ $('#submit').click(function(){
     var form = new FormData();
     form.append("file", audioFile);
       $.ajax({
-          url : "http://127.0.0.1:8080/audio",
+          url : "https://complain-form.herokuapp.com/audio",
           type : "POST",
           data : form,
           processData: false,

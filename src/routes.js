@@ -134,7 +134,7 @@ const routes =[
 	},
 	{
 		method: 'GET',
-		path: 'https://complain-form.herokuapp.com/get/user/{emailid}',
+		path: '/get/user/{emailid}',
 		config: {
 			//include this api in swagger documentation
 			tags: ['api'],

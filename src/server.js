@@ -16,9 +16,9 @@ const server = new Hapi.Server({
 });
 
 
-
+const PORT =  process.env.PORT;
 server.connection({
-	port: process.env.PORT || 8080,
+	port: PORT || 8080,
 	routes: { cors: true }
 });
 
@@ -65,3 +65,4 @@ server.start(err=>{
 
 	console.log('Server started at', server.info.uri);
 });
+

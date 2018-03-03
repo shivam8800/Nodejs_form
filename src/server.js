@@ -3,7 +3,6 @@ import routes from './routes'
 import Inert from 'inert';
 import Vision from 'vision';
 var Path = require('path');
-var cool = require('cool-ascii-faces');
 
 
 const server = new Hapi.Server({

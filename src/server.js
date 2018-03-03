@@ -17,6 +17,8 @@ const server = new Hapi.Server({
 
 
 const PORT =  process.env.PORT;
+console.log("-------------");
+console.log(PORT);
 server.connection({
 	port: PORT || 8080,
 	routes: { cors: true }

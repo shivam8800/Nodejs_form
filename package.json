@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon bootstrap.js"
+    "start": "node bootstrap.js"
   },
   "keywords": [
     "hard",

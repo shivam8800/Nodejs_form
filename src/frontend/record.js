@@ -111,7 +111,7 @@ $('#submit').click(function(){
     var form = new FormData();
     form.append("file", audioFile);
       $.ajax({
-          url : "https://complain-form.herokuapp.com/audio",
+          url : "http://localhost:5000/audio",
           type : "POST",
           data : form,
           processData: false,

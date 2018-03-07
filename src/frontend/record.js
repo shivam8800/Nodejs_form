@@ -106,26 +106,26 @@ $('#submit').click(function(){
             }
         });
 
-    download();
-    var audioFile = file;
-    var form = new FormData();
-    form.append("file", audioFile);
-      $.ajax({
-          url : "http://localhost:5000/audio",
-          type : "POST",
-          data : form,
-          processData: false,
-          contentType: false,
-          mimeType: "multipart/form-data",
-          success : function(json) {
-              console.log("yeah got it!")
-              console.log(json);
-          },
-          error: function(err){
-              alert(err);
-              console.log(err);
-          }
-      });
+    // download();
+    // var audioFile = file;
+    // var form = new FormData();
+    // form.append("file", audioFile);
+    //   $.ajax({
+    //       url : "http://localhost:5000/audio",
+    //       type : "POST",
+    //       data : form,
+    //       processData: false,
+    //       contentType: false,
+    //       mimeType: "multipart/form-data",
+    //       success : function(json) {
+    //           console.log("yeah got it!")
+    //           console.log(json);
+    //       },
+    //       error: function(err){
+    //           alert(err);
+    //           console.log(err);
+    //       }
+    //   });
 
 
    });

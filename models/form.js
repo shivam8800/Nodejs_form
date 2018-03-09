@@ -6,7 +6,8 @@ var Schema = mongoose.Schema;
 
 var FormSchema = new Schema({
 	name: String,
-	email:{type:Email, required:true, unique:true}
+	email:{type:Email, required:true, unique:true},
+	phonnumber: Number
 });
 
 const Form = mongoose.model('Form', FormSchema)

@@ -65,14 +65,13 @@ const routes =[
 				payload: {
 					name: Joi.string().required(),
 					email: Joi.string().required(),
+					phonnumber: Joi.string().required()
 				}
 			}
 		},
 		handler: (request, reply) =>{
 			//create a mongodb form object	to save it into database
 			var form = new FormModel(request.payload);
-
-			console.log(request.payload);
 
 			//call save method to save it and pass call back method to handel a error
 			form.save(function(err){

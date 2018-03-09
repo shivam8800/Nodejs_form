@@ -12,6 +12,17 @@
 
 var recordButton, stopButton, recorder;
   var recordedChunks = [];
+$('#stop').hide();
+$('#audio').hide();
+
+  $('#record').click(function(){
+    $('#stop').show();
+    $('#record').hide();
+  })
+$('#stop').click(function(){
+  $('#audio').show();
+  $('#stop').hide();
+})
 
 window.onload = function () {
   recordButton = document.getElementById('record');
@@ -79,53 +90,47 @@ function download() {
   a.download = 'audio.mp3';
   // a.click();
   window.URL.revokeObjectURL(url);
-  file = new File([blob], $('#email').val()+ '.mp3', {type: 'audio/webm', lastModified: Date.now()});
+  file = new File([blob], localStorage.getItem('email')+ '.mp3', {type: 'audio/webm', lastModified: Date.now()});
 }
 
+$('#saveaudio').click(function(){
 
-$('#submit').click(function(){
-
-    var formModel = {}
-    var name = $('#name').val();
-    var email = $('#email').val();
-
-    formModel.name = name;
-    formModel.email = email;
+    download();
+    var audioFile = file;
+    var form = new FormData();
+    form.append("file", audioFile);
 
 
-    $.ajax({
-            url : "https://complain-form.herokuapp.com/post/userdetails",
-            type : "POST",
-            data : formModel,
-            success : function(json){
-                location.reload();
-                console.log(formModel)
-           },
-            error : function(err){
-                alert(err);
-            }
-        });
+      $.ajax({
+          url : 'http://127.0.0.1:8080/audio',
+          type : "POST",
+          data : form,
+          processData: false,
+          contentType: false,
+          mimeType: "multipart/form-data",
+          success : function(json) {
+              console.log("yeah got it!")
+              console.log(json);
+          },
+          error: function(err){
+              alert(err);
+              console.log("this is error",err);
+          }
+      });
 
-    // download();
-    // var audioFile = file;
-    // var form = new FormData();
-    // form.append("file", audioFile);
-    //   $.ajax({
-    //       url : "http://localhost:5000/audio",
-    //       type : "POST",
-    //       data : form,
-    //       processData: false,
-    //       contentType: false,
-    //       mimeType: "multipart/form-data",
-    //       success : function(json) {
-    //           console.log("yeah got it!")
-    //           console.log(json);
-    //       },
-    //       error: function(err){
-    //           alert(err);
-    //           console.log(err);
-    //       }
-    //   });
-
-
-   });
+      var email=localStorage.getItem('email');
+      
+      $.ajax({
+          url: 'http://127.0.0.1:8080/get/user/'+ email,
+          type: 'GET',
+          success: function(result) {
+              window.localStorage.setItem('name', result['data']['0']['name']);
+              window.localStorage.setItem('email', email);
+              window.location = "show.html";
+          },
+          error : function(err){
+              alert(err);
+              console.log(err);
+          }
+      });
+});

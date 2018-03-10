@@ -98,3 +98,11 @@ canvas, video {
 video {
     background: #666;
 }
+
+input:invalid {
+    background: #666;   
+}
+
+input:empty {
+    background: #fff;   
+}

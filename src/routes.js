@@ -60,14 +60,6 @@ const routes =[
 			tags: ['api'],
 			description: 'submit a new form',
 			notes: 'submit a new form',
-			//we use joi plugin to validate the request
-			validate: {
-				payload: {
-					name: Joi.string().required(),
-					email: Joi.string().required(),
-					phonnumber: Joi.string().required()
-				}
-			}
 		},
 		handler: (request, reply) =>{
 			//create a mongodb form object	to save it into database

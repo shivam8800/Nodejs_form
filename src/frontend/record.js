@@ -14,18 +14,37 @@ var recordButton, stopButton, recorder;
   var recordedChunks = [];
 $('#stop').hide();
 $('#audio').hide();
+$('#pause').hide();
+$('#resume').hide();
 
   $('#record').click(function(){
     $('#stop').show();
+    $('#pause').show();
     $('#record').hide();
-  })
+  });
+
+  $('#pause').click(function(){
+    $('#pause').hide();
+    $('#resume').show();
+  });
+
+  $('#resume').click(function(){
+    $('#pause').show();
+    $('#resume').hide();
+  });
+
+
 $('#stop').click(function(){
   $('#audio').show();
+  $('#pause').hide();
+  $('#resume').hide(); 
   $('#stop').hide();
 })
 
 window.onload = function () {
   recordButton = document.getElementById('record');
+  pauseButton = document.getElementById('pause');
+  resumeButton = document.getElementById('resume');
   stopButton = document.getElementById('stop');
 
 
@@ -36,7 +55,12 @@ window.onload = function () {
   .then(function (stream) {
     recordButton.disabled = false;
     recordButton.addEventListener('click', startRecording);
+    
+    pauseButton.addEventListener('click', pauseRecording);
+    resumeButton.addEventListener('click', resumeRecording);
+
     stopButton.addEventListener('click', stopRecording);
+
     recorder = new MediaRecorder(stream);
 
     recorder.ondataavailable = handleDataAvailable;
@@ -57,8 +81,26 @@ window.onload = function () {
 function startRecording() {
   recordButton.disabled = true;
   stopButton.disabled = false;
+  pauseButton.disabled = false;
 
   recorder.start();
+}
+
+function pauseRecording() {
+  stopButton.disabled = false;
+  pauseButton.disabled = true;
+  resumeButton.disabled = false;
+
+  // Stopping the recorder will eventually trigger the `dataavailable` event and we can complete the recording process
+  recorder.pause();
+}
+
+function resumeRecording() {
+  stopButton.disabled = false;
+  pauseButton.disabled = false;
+  resumeButton.disabled = true;
+
+  recorder.resume();
 }
 
 function stopRecording() {

@@ -52,9 +52,14 @@ server.register(require('inert'), (err) => {
 	    path: '/{filename}',
 	    handler: {
 	        file: function (request) {
-	            return request.params.filename;
+	        	if (request.params.filename.split('.').pop() == 'html') {
+	        	 	return null 
+	        	}
+	        	else {
+	        		 return request.params.filename;	            
 	        }
 	    }
+	}
 	});
 });
 

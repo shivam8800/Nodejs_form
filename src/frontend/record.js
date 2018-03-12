@@ -152,7 +152,6 @@ $('#saveaudio').click(function(){
           mimeType: "multipart/form-data",
           success : function(json) {
               console.log("yeah got it!")
-              console.log(json);
           },
           error: function(err){
               alert(err);
@@ -166,14 +165,12 @@ $('#saveaudio').click(function(){
           url: 'http://127.0.0.1:8080/get/user/'+ email,
           type: 'GET',
           success: function(result) {
-            console.log(result)
               window.localStorage.setItem('name', result['data']['0']['name']);
               window.localStorage.setItem('email', email);
-              window.location = "show.html";
+              window.location = "http://127.0.0.1:8080/show/" + result['data']['0']['_id'];
           },
           error : function(err){
               alert(err);
-              console.log(err);
           }
       });
 });

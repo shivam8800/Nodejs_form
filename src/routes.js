@@ -7,6 +7,9 @@ var path = require('path');
 
 var cool = require('cool-ascii-faces');
 
+var ObjectId = require('mongodb').ObjectID;
+
+
 
 
 const routes =[
@@ -15,6 +18,42 @@ const routes =[
 	path: '/',
 	handler: (request, reply) =>{
 			reply.file("./index.html");
+		}
+	},
+	{
+		method: 'GET',
+		path: '/record/{objectid}',
+		handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+    			if (err) {
+    				reply({
+    					statusCode: 503,
+    					message: 'no metch found',
+    					data: err
+    				});
+    			}
+    			else{
+    				reply.file("./record.html");
+    			}
+    		});
+		}
+	},
+	{
+		method: 'GET',
+		path: '/show/{objectid}',
+		handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+    			if (err) {
+    				reply({
+    					statusCode: 503,
+    					message: 'no metch found',
+    					data: err
+    				});
+    			}
+    			else{
+					reply.file("./show.html");
+    			}
+    		});
 		}
 	},
 	{

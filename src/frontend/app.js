@@ -18,14 +18,24 @@ $(document).ready(function(){
             type : "POST",
             data : formModel,
             success : function(json){
-                window.localStorage.setItem('email', formModel["email"]);
-                window.location = "record.html";
-                console.log(formModel)
+                console.log(json)
             },
             error : function(err){
                 alert(err);
             }
         });
+        $.ajax({
+          url: 'http://127.0.0.1:8080/get/user/'+ formModel["email"],
+          type: 'GET',
+          success: function(result) {
+            window.localStorage.setItem('email', formModel["email"]);
+            window.location = "http://127.0.0.1:8080/record/" + result['data']['0']['_id'];
+          },
+          error : function(err){
+              alert(err);
+          }
+      });
+
    });
 
 });

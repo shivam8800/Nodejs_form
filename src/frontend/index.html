@@ -11,30 +11,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
 </head>
-<body>
+<body style="padding: 0px;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="border: 1px solid gainsboro;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="#">Hidden brand</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <div class="nav-item">
+            <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link disabled" href="#">Link</a>
+          </div>
+        </form>
+      </div>
+    </nav>
+
     
-    
-  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
     <div class="col-md-5">
         <div class="form-area">
             <form id="order_form" role="form">
             <br style="clear:both">
                         <h3 style="margin-bottom: 25px; text-align: center;">Detail Form</h3>
-              <div class="border">
               <div class="form-group">
                 <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
               </div>
               <div class="form-group">
                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+              </div>            
+              <div class="form-group">
+                <input type="number" style="height: 20%;" class="form-control" id="phonnumber" name="country_code" placeholder="Country code" required>
               </div>
               <div class="form-group">
                 <input type="number" class="form-control" id="phonnumber" name="phone_number" placeholder="Contact number" required>
-              </div>            
-              <div class="form-group">
-                <input type="number" class="form-control" id="phonnumber" name="country_code" placeholder="Country code" required>
-              </div>            
-                <button type="button" id="submit" name="submit" class="btn btn-primary pull-right"> Next </button>
               </div>
+                <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Next </button>
             </form>
         </div>
     </div>

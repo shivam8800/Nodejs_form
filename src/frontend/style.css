@@ -106,3 +106,7 @@ input:invalid {
 input:empty {
     background: #fff;   
 }
+
+.error{
+  color: red;
+}

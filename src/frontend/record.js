@@ -161,11 +161,12 @@ $('#saveaudio').click(function(){
       });
 
       var email=localStorage.getItem('email');
-      
+      console.log(email)
       $.ajax({
           url: 'http://127.0.0.1:8080/get/user/'+ email,
           type: 'GET',
           success: function(result) {
+            console.log(result)
               window.localStorage.setItem('name', result['data']['0']['name']);
               window.localStorage.setItem('email', email);
               window.location = "show.html";

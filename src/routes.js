@@ -4,12 +4,8 @@ const Joi = require('joi');
 
 import fs from 'fs'
 var path = require('path');
-
 var cool = require('cool-ascii-faces');
-
 var ObjectId = require('mongodb').ObjectID;
-
-
 
 
 const routes =[
@@ -17,6 +13,7 @@ const routes =[
 	method: 'GET',
 	path: '/',
 	handler: (request, reply) =>{
+			console.log(process.env.USER_KEY);
 			reply.file("./index.html");
 		}
 	},
@@ -51,7 +48,23 @@ const routes =[
     				});
     			}
     			else{
-					reply.file("./show.html");
+					var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
+					var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
+					var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+					 
+					var data1 = {
+					  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
+					  to: 'shivam16@navgurukul.org',
+					  subject: 'Submited details',
+					  text: "your name is " + data['name'] + ".Your email id is " + data['email'] + " and phon number is " + data['country_code'] +"-"+ data['phone_number'] + "."
+					};
+					mailgun.messages().send(data1, function (error, body) {
+					  if (!error){
+						reply.file("./show.html");
+					  } else {
+					  	console.log(error);
+					  }
+					});
     			}
     		});
 		}
@@ -158,6 +171,7 @@ const routes =[
 	                    reply(JSON.stringify(ret));
 	                })
 	            }
+
 
 	        }
 	    }

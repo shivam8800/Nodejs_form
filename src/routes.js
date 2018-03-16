@@ -13,7 +13,6 @@ const routes =[
 	method: 'GET',
 	path: '/',
 	handler: (request, reply) =>{
-			console.log(process.env.USER_KEY);
 			reply.file("./index.html");
 		}
 	},
@@ -51,12 +50,15 @@ const routes =[
 					var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
 					var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
 					var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
-					 
+					var filepath = path.join(__dirname + "/uploads/" , data['email'] + '.mp3');
+
+
 					var data1 = {
 					  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
-					  to: 'shivam16@navgurukul.org',
+					  to: data['email'],
 					  subject: 'Submited details',
-					  text: "your name is " + data['name'] + ".Your email id is " + data['email'] + " and phon number is " + data['country_code'] +"-"+ data['phone_number'] + "."
+					  text: "your name is " + data['name'] + ".Your email id is " + data['email'] + " and phone number is " + data['country_code'] +"-"+ data['phone_number'] + ".",
+					    attachment: filepath
 					};
 					mailgun.messages().send(data1, function (error, body) {
 					  if (!error){

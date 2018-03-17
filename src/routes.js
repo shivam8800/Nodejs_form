@@ -61,6 +61,7 @@ const routes =[
 					    attachment: filepath
 					};
 					mailgun.messages().send(data1, function (error, body) {
+					  console.log("this is body",body);
 					  if (!error){
 						reply.file("./show.html");
 					  } else {

@@ -122,7 +122,7 @@ var file;
 
 function download() {
   var blob = new Blob(recordedChunks, {
-    type: 'audio/webm'
+    type: 'audio/mp3'
   });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
@@ -132,7 +132,7 @@ function download() {
   a.download = 'audio.mp3';
   // a.click();
   window.URL.revokeObjectURL(url);
-  file = new File([blob], localStorage.getItem('email')+ '.mp3', {type: 'audio/webm', lastModified: Date.now()});
+  file = new File([blob], localStorage.getItem('email')+ '.mp3', {type: 'audio/mp3', lastModified: Date.now()});
 }
 
 $('#saveaudio').click(function(){

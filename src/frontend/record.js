@@ -132,7 +132,7 @@ function download() {
   a.download = 'audio.mp3';
   // a.click();
   window.URL.revokeObjectURL(url);
-  file = new File([blob], localStorage.getItem('email')+ '.mp3', {type: 'audio/mp3', lastModified: Date.now()});
+  file = new File([blob], localStorage.getItem('objectid')+ '.mp3', {type: 'audio/mp3', lastModified: Date.now()});
 }
 
 $('#saveaudio').click(function(){
@@ -151,26 +151,13 @@ $('#saveaudio').click(function(){
           contentType: false,
           mimeType: "multipart/form-data",
           success : function(json) {
-              console.log("yeah got it!")
+              var objectid=localStorage.getItem('objectid');
+              window.location = "/show/" + objectid;
+              window.localStorage.setItem('objectid', objectid);
           },
           error: function(err){
               alert(err);
               console.log("this is error",err);
-          }
-      });
-
-      var email=localStorage.getItem('email');
-      console.log(email)
-      $.ajax({
-          url: 'http://127.0.0.1:8080/get/user/'+ email,
-          type: 'GET',
-          success: function(result) {
-              window.localStorage.setItem('name', result['data']['0']['name']);
-              window.localStorage.setItem('email', email);
-              window.location = "http://127.0.0.1:8080/show/" + result['data']['0']['_id'];
-          },
-          error : function(err){
-              alert(err);
           }
       });
 });

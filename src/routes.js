@@ -50,8 +50,7 @@ const routes =[
 					var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
 					var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
 					var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
-					var filepath = path.join(__dirname + "/uploads/" , data['email'] + '.mp3');
-
+					var filepath = path.join(__dirname + "/uploads/" , request.params.objectid + '.mp3');
 
 					var data1 = {
 					  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
@@ -114,14 +113,14 @@ const routes =[
 			//Include this api in swagger documentation
 			tags: ['api'],
 			description: 'submit a new form',
-			notes: 'submit a new form',
+			notes: 'submit a new form'
 		},
 		handler: (request, reply) =>{
 			//create a mongodb form object	to save it into database
 			var form = new FormModel(request.payload);
 
 			//call save method to save it and pass call back method to handel a error
-			form.save(function(err){
+			form.save(function(err, data){
 				if (err){
 					// console.log(err)
 					reply({
@@ -131,7 +130,8 @@ const routes =[
 				} else {
 					reply({
 						statusCode: 201,
-						message: 'User created successfully!'
+						message: 'User created successfully!',
+						data: data
 					});
 				}
 			})
@@ -181,7 +181,7 @@ const routes =[
 	},
 	{
 		method: 'GET',
-		path: '/get/user/{emailid}',
+		path: '/get/user/{objectid}',
 		config: {
 			//include this api in swagger documentation
 			tags: ['api'],
@@ -190,12 +190,12 @@ const routes =[
 			//we use joi plugin to validate the request
 			validate: {
 				params: {
-					emailid: Joi.string().required()
+					objectid: Joi.string().required()
 				}
 			}
 		},
 		handler: (request, reply) =>{
-			FormModel.find({"email":request.params.emailid}, function(err, data){
+			FormModel.find({"_id":request.params.objectid}, function(err, data){
     			// console.log('dslfkjlkds');
     			if (err) {
     				reply({
@@ -216,7 +216,7 @@ const routes =[
 	},
 	{
 		method: 'GET',
-		path: '/get/userfile/{emailid}',
+		path: '/get/userfile/{objectid}',
 		config: {
 			//include this api in swagger documentation
 			tags: ['api'],
@@ -225,16 +225,16 @@ const routes =[
 			//we use joi plugin to validate the request
 			validate: {
 				params: {
-					emailid: Joi.string().required()
+					objectid: Joi.string().required()
 				}
 			}
 		},
 		handler: (request, reply) =>{
-			var file = path.join(__dirname + "/uploads/", request.params.emailid + ".mp3");
+			var file = path.join(__dirname + "/uploads/", request.params.objectid + ".mp3");
 
 			fs.readFile(file , function (err,data){
                 return reply(data)
-                .header('Content-disposition', 'attachment; filename=' + request.params.emailid + ".mp3")
+                .header('Content-disposition', 'attachment; filename=' + request.params.objectid + ".mp3")
             });
 		}
 	}

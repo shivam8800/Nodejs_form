@@ -18,6 +18,7 @@ $(document).ready(function(){
             type : "POST",
             data : formModel,
             success : function(json){
+                console.log(json)
                 window.localStorage.setItem('objectid', json['data']['_id']);
                 window.location = "/record/" + json['data']['_id'];
             },

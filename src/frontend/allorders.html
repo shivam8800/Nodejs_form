@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Detail Form</title>
+	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js"></script>
+</head>
+
+<body style="padding: 0px;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="border: 1px solid gainsboro;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="#">Hidden brand</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <div class="nav-item">
+            <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link disabled" href="#">Link</a>
+          </div>
+        </form>
+      </div>
+    </nav>
+  <div class="container panel panel-primary">
+
+	  <h2>Filterable Table</h2>
+	  <p>Type something in the input field to search the table for first names, last names or emails:</p>
+	  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>
+	  <div id="demo" class="collapse"> 
+	  	<input class="form-control" id="myInput" type="text" placeholder="Filter..">
+	  </div>
+
+	  <table class="table table-hover table-bordered">
+	  <thead>
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">First</th>
+	      <th scope="col">Last</th>
+	      <th scope="col">Handle</th>
+	    </tr>
+	  </thead>
+	  <tbody id="myTable">
+	    <tr>
+	      <th scope="row">1</th>
+	      <td>Mark</td>
+	      <td>Otto</td>
+	      <td>@mdo</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">2</th>
+	      <td>Jacob</td>
+	      <td>Thornton</td>
+	      <td>@fat</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">3</th>
+	      <td>@twitter</td>
+	      <td>@twitter</td>
+	      <td>@twitter</td>
+	    </tr>
+	  </tbody>
+	</table>
+</div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8080/orders.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+</body>
+</html>

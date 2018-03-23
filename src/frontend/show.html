@@ -10,6 +10,7 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js"></script>
 </head>
+
 <body style="padding: 0px;">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="border: 1px solid gainsboro;">
@@ -44,19 +45,19 @@
                         <h3 style="margin-bottom: 25px; text-align: center;">Show details</h3>
               <div>
               <div class="form-group">
-                <input type="text" class="form-control" id="name1" name="name" placeholder="Name" required>
+                <input type="text" class="form-control not-allowed" id="name1" name="name" placeholder="Name" required disabled>
               </div>
               <div class="form-group">
                   <p><audio id="getaudio" controls></audio></p>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
+                <input type="text" class="form-control not-allowed" id="email" name="email" placeholder="Email" required disabled>
               </div>
               <div class="form-group">
-                <input type="number" style="height: 20%;" class="form-control" id="country_code" name="country_code" placeholder="Country code" required>
+                <input type="number" style="height: 20%;" class="form-control not-allowed" id="country_code" name="country_code" placeholder="Country code" required disabled>
               </div>
               <div class="form-group">
-                <input type="number" class="form-control" id="phonnumber" name="phone_number" placeholder="Contact number" required>
+                <input type="number" class="form-control not-allowed" id="phonnumber" name="phone_number" placeholder="Contact number" required disabled>
               </div>
                 <a href="http://127.0.0.1:8080"><button type="button" id="submit" name="submit" class="btn btn-primary float-right">Back</button></a>
               </div>

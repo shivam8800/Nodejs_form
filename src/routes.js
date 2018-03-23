@@ -50,7 +50,6 @@ const routes =[
 					var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
 					var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
 					var filepath = path.join(__dirname + "/uploads/" , request.params.objectid + '.mp3');
-
 					var data1 = {
 					  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
 					  to: data['email'],
@@ -140,7 +139,6 @@ const routes =[
 		handler: (request, reply) =>{
 			//create a mongodb form object	to save it into database
 			var form = new FormModel(request.payload);
-
 			//call save method to save it and pass call back method to handel a error
 			form.save(function(err, data){
 				if (err){

@@ -4,7 +4,6 @@ const Joi = require('joi');
 
 import fs from 'fs'
 var path = require('path');
-var cool = require('cool-ascii-faces');
 var ObjectId = require('mongodb').ObjectID;
 
 
@@ -73,19 +72,42 @@ const routes =[
 	},
 	{
 		method: 'GET',
-		path: '/cool',
+		path: '/show/orders/{emailid}',
+		config:{
+			//we use joi plugin to validate the request
+			validate:{
+				params:{
+					emailid: Joi.string().required()
+				}
+			}
+		},
 		handler: (request, reply) =>{
-			reply(cool());
+			var order = {
+				"email": request.params.emailid
+			}
+
+			FormModel.find(order, function(err, orders){
+				if (err) {
+    				reply({
+    					statusCode: 503,
+    					message: 'no metch found',
+    					data: err
+    				});
+    			}
+    			else{
+    				reply.file('./allorders.html')
+    			}
+			});
 		}
 	},
 	{
 		method: 'GET',
-		path: '/get/alluser',
+		path: '/get/allorders',
 		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
-			description: 'Get all forms',
-			notes: 'Get all forms'
+			description: 'Get all orders',
+			notes: 'Get all orders'
 		},
 		handler: (request, reply) =>{
 			
@@ -108,7 +130,7 @@ const routes =[
 	},
 	{
 		method: 'POST',
-		path: '/post/userdetails',
+		path: '/post/new/order',
 		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
@@ -181,7 +203,7 @@ const routes =[
 	},
 	{
 		method: 'GET',
-		path: '/get/user/{objectid}',
+		path: '/get/order/{objectid}',
 		config: {
 			//include this api in swagger documentation
 			tags: ['api'],
@@ -196,7 +218,6 @@ const routes =[
 		},
 		handler: (request, reply) =>{
 			FormModel.find({"_id":request.params.objectid}, function(err, data){
-    			// console.log('dslfkjlkds');
     			if (err) {
     				reply({
     					statusCode: 503,
@@ -236,6 +257,45 @@ const routes =[
                 return reply(data)
                 .header('Content-disposition', 'attachment; filename=' + request.params.objectid + ".mp3")
             });
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/orders/{emailid}',
+		config:{
+			//include this api in swagger documetion
+			tags: ['api'],
+			description: 'get all orders of a user',
+			notes: 'get all orders of a user',
+			//we use joi plugin to validate the request
+			validate:{
+				params:{
+					emailid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+			var order = {
+				"email": request.params.emailid
+			}
+
+			FormModel.find(order, function(err, orders){
+				if (err) {
+    				reply({
+    					statusCode: 503,
+    					message: 'no metch found',
+    					data: err
+    				});
+    			}
+    			else{
+    				reply({
+    					statusCode: 200,
+    					message: "your complaint has been found results are here.",
+    					data: orders
+    				});
+    			}
+			});
+				
 		}
 	}
 ]

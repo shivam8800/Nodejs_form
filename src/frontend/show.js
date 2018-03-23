@@ -6,7 +6,7 @@ $(document).ready(function(){
 	  var objectid = localStorage.getItem('objectid')
 
 		$.ajax({
-	          url: 'http://127.0.0.1:8080/get/user/'+ objectid,
+	          url: 'http://127.0.0.1:8080/get/order/'+ objectid,
 	          type: 'GET',
 	          success: function(result) {
 	              $('#name1').val(result['data']['0']['name']);

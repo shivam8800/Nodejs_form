@@ -190,3 +190,9 @@ input:empty {
 .wait {cursor: wait;}
 .zoom-in {cursor: zoom-in;}
 .zoom-out {cursor: zoom-out;}
+
+
+.line{
+  display: flex;
+  flex-direction: row;
+}

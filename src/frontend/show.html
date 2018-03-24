@@ -38,26 +38,72 @@
 
     
   <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
-    <div class="col-md-5">
+    <div class="col-md-9">
         <div class="form-area">
             <form role="form">
             <br style="clear:both">
-                        <h3 style="margin-bottom: 25px; text-align: center;">Show details</h3>
+                    <h3 style="margin-bottom: 25px; text-align: center;">Show details</h3>
               <div>
-              <div class="form-group">
-                <input type="text" class="form-control not-allowed" id="name1" name="name" placeholder="Name" required disabled>
+              <div class="form-group line">
+                <label class="col-sm-3 col-form-label">Name</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control not-allowed" id="name1" name="name" placeholder="Name" required disabled>
+                </div>
               </div>
-              <div class="form-group">
-                  <p><audio id="getaudio" controls></audio></p>
+              <div class="form-group line">
+                  <label class="col-sm-3 col-form-label"> Audio Recording</label>
+                  <div class="col-sm-9">
+                    <p><audio id="getaudio" controls></audio></p>
+                  </div>
               </div>
-              <div class="form-group">
-                <input type="text" class="form-control not-allowed" id="email" name="email" placeholder="Email" required disabled>
+              <div class="form-group line">
+                <label for="staticEmail" class="col-sm-3 col-form-label">Email Id</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly class="form-control not-allowed" id="email" name="email" placeholder="Email" required disabled>
+                </div>
               </div>
-              <div class="form-group">
-                <input type="number" style="height: 20%;" class="form-control not-allowed" id="country_code" name="country_code" placeholder="Country code" required disabled>
+              <div class="form-group line">
+                <label class="col-sm-3 col-form-label">Contact Number</label>
+                <div class="col-sm-9 line">
+                  <input type="number" style="width: 30%; margin-right: 1%;" class="form-control not-allowed" id="country_code" name="country_code" placeholder="Country code" required disabled>
+                  <input type="number" class="form-control not-allowed" style="width: 70%;" id="phonnumber" name="phone_number" placeholder="Contact number" required disabled>
+                </div>
               </div>
-              <div class="form-group">
-                <input type="number" class="form-control not-allowed" id="phonnumber" name="phone_number" placeholder="Contact number" required disabled>
+
+
+              <div class="form-group line">
+                <label class="col-sm-3 col-form-label">Interviewed People</label>
+                <div class="col-sm-9">
+                  <input type="number" class="form-control" id="interviewed_people" name="interviewed_people" placeholder="How many people will be interviewed during this shoot ?" required disabled>
+                </div>
+              </div>
+
+              <div class="form-group line">
+                <label class="col-sm-3 col-form-label">Shoot Cities</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="shoot_cities" name="shoot_cities" placeholder="Cities of shoot" required disabled>
+                </div>
+              </div>
+
+              <div class="form-group line">
+                <label class="col-sm-3 col-form-label">Total Videos</label>
+                <div class="col-sm-9">
+                  <input type="number" class="form-control" id="total_videos" name="total_videos" placeholder="How many videos will be produced ?" required disabled>
+                </div>
+              </div>
+
+              <div class="form-group line">
+                <label class="col-sm-3 col-form-label">Length of a Video</label>
+                <div class="col-md-9">
+                  <input type="text" class="form-control" id="video_length" name="video_length" placeholder="How long would you like each video to be ?" required disabled>
+                </div>
+              </div>
+
+              <div class="form-group line">
+                <label class="col-sm-3 col-form-label">Total Budget</label>
+                <div class="col-md-9">
+                  <input type="number" class="form-control" id="total_budget" name="total_budget" placeholder="What’s your target budget" required disabled>
+                </div>
               </div>
                 <a href="http://127.0.0.1:8080"><button type="button" id="submit" name="submit" class="btn btn-primary float-right">Back</button></a>
               </div>

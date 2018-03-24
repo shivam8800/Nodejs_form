@@ -1,6 +1,21 @@
 $(document).ready(function(){
 
     $("#order_form").validate();
+    var counter = 0
+    $('#total_budget').on('input', function() {
+        counter = counter + 1;
+
+        var totalMinutes = $('#total_videos').val() * $('#video_length').val()
+        var totalBudget = $('#total_budget').val();
+
+        var oneMinuteCost = totalBudget/totalMinutes
+
+        if (counter > 0){
+            $('#message').children("small").remove();
+        }
+
+        $("#message").append("<small style='color: blue;'>You are spending " +  oneMinuteCost + " $ each minute</small>");
+    });
 
     $('#submit').click(function(e){
 
@@ -51,17 +66,6 @@ $(document).ready(function(){
               }
             })
             if ($('#myform').valid()) {
-                // $.ajax({
-                //   url: 'http://127.0.0.1:8080/get/orders/'+ $('#email_id').val(),
-                //   type: 'GET',
-                //   success: function(result) {
-                //       console.log(result);
-                //   },
-                //   error : function(err){
-                //       alert(err);
-                //       console.log(err);
-                //   }
-                // });
                 modal.style.display = "none";
                 window.location = "/show/orders/" + $('#email_id').val();
 

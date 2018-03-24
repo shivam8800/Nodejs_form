@@ -41,8 +41,8 @@
     </nav>
 
     
-  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
-    <div class="col-md-5">
+  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <div class="col-md-6">
         <div class="form-area">
             <form id="order_form" role="form">
             <br style="clear:both">
@@ -53,9 +53,9 @@
               <div class="form-group">
                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
               </div>
-              <div class="form-group">
+              <div class="form-group line">
                 <!-- country codes (ISO 3166) and Dial codes. -->
-                <select name="countryCode" style="height: 20%;" class="form-control">
+                <select name="countryCode" style="width: 30%; margin-right: 1%;" class="form-control">
                   <option data-countryCode="GB" value="44" Selected>UK (+44)</option>
                   <option data-countryCode="US" value="1">USA (+1)</option>
                   <optgroup label="Other countries">
@@ -275,14 +275,39 @@
                     <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option>
                   </optgroup>
                 </select>
+                <input type="number" style="width: 70%;" class="form-control" id="phonnumber" name="phone_number" placeholder="Contact number" required>
               </div>
+
               <div class="form-group">
-                <input type="number" class="form-control" id="phonnumber" name="phone_number" placeholder="Contact number" required>
+                <input type="number" class="form-control" id="interviewed_people" name="interviewed_people" placeholder="How many people will be interviewed during this shoot ?" required>
               </div>
-                <!-- <button id="myBtn" > Get Orders </button> -->
+
+
+              <div class="form-group">
+                <input type="text" class="form-control" id="shoot_cities" name="shoot_cities" placeholder="Cities of shoot" required>
+              </div>
+
+              <div class="form-group">
+                <input type="number" class="form-control" id="total_videos" name="total_videos" placeholder="How many videos will be produced ?" required>
+              </div>
+
+              <div class="form-group line">
+                <input type="number" class="form-control" style="width: 80%;" id="video_length" name="video_length" placeholder="How long would you like each video to be ?" required>
+                <input type="text" name="min" value="Minutes" style="width: 20%;" class="form-control" disabled>
+              </div>
+
+              <div class="form-group">
+                <div class="line">
+                    <input type="number" class="form-control" style="width: 80%;" id="total_budget" name="total_budget" placeholder="What’s your target budget" required>
+                    <input type="text" name="Dollar" value="$" style="width: 20%;" class="form-control" disabled>
+                </div>
+                <div id="message">  
+                </div>
+              </div>
+
                 <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Next </button>
             </form>
-            <button id="orders" class="btn btn-primary float-left">Open Modal</button>
+            <button id="orders" class="btn btn-primary float-left">All Orders</button>
         </div>
     </div>
   </div>

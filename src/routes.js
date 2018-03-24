@@ -54,7 +54,7 @@ const routes =[
 					  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
 					  to: data['email'],
 					  subject: 'Submited details',
-					  text: "your name is " + data['name'] + ".Your email id is " + data['email'] + " and phone number is " + data['country_code'] +"-"+ data['phone_number'] + ".",
+					  text: "your name is " + data['name'] + ".Your email id is " + data['email'] + " and phone number is " + data['countryCode'] +"-"+ data['phone_number'] + ".",
 					    attachment: filepath
 					};
 					mailgun.messages().send(data1, function (error, body) {

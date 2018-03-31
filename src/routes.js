@@ -6,6 +6,11 @@ import fs from 'fs'
 var path = require('path');
 var ObjectId = require('mongodb').ObjectID;
 
+const rp = require('request-promise');
+const cheerio = require('cheerio');
+
+var request1 = require('request');
+
 
 const routes =[
 	{
@@ -294,6 +299,54 @@ const routes =[
     			}
 			});
 				
+		}
+	},
+	{
+		method: 'GET',
+		path: '/get/allcities',
+		config:{
+			tags: ['api'],
+			description: 'get list of all cities of whole world',
+			notes: 'get list of all cities of whole world'
+		},
+		handler: (request, reply) =>{
+
+			const options = {
+			  uri: 'https://en.wikipedia.org/wiki/Lists_of_cities_by_country',
+			  transform: function (body) {
+			    return cheerio.load(body);
+			  }
+			}
+
+			rp(options)
+			  .then(($) => {
+			    $('b').each(function(i, elem){
+			    	if (i == 5 ){
+				    	var word = $(this).text();
+				    	var new_word = "";
+						for(var j = 0; j < word.length;j++){
+							if (word[j] == " "){
+							    new_word = new_word + "_";
+							} else {
+							    new_word = new_word + word[j];
+							}
+						}
+						var city_url = 'https://en.wikipedia.org/wiki/' + new_word
+
+						request1(city_url, function (error, response, html) {
+						  if (!error && response.statusCode == 200) {
+						        var $ = cheerio.load(html);
+						        console.log($('table tbody tr td a').html()	);
+						  }
+						});
+						
+			    	}
+			    });
+			    reply($('b').html());
+			  })
+			  .catch((err) => {
+			    console.log(err);
+			  });
 		}
 	}
 ]

@@ -3,6 +3,7 @@ $(document).ready(function(){
     $("#order_form").validate();
     var counter = 0
     $('#total_budget').on('input', function() {
+        console.log($('#countryCode').val());
         counter = counter + 1;
 
         var totalMinutes = $('#total_videos').val() * $('#video_length').val()

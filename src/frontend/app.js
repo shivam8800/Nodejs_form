@@ -3,19 +3,62 @@ $(document).ready(function(){
     $("#order_form").validate();
     var counter = 0
     $('#total_budget').on('input', function() {
-        console.log($('#countryCode').val());
-        counter = counter + 1;
 
-        var totalMinutes = $('#total_videos').val() * $('#video_length').val()
-        var totalBudget = $('#total_budget').val();
+        if ( $('#total_videos').val() != "" && $('#video_length').val() != ""  && $('#total_budget').val() != ""){
+            counter = counter + 1;
+            var totalMinutes = $('#total_videos').val() * $('#video_length').val()
+            var totalBudget = $('#total_budget').val();
 
-        var oneMinuteCost = totalBudget/totalMinutes
+            var oneMinuteCost = totalBudget/totalMinutes
 
-        if (counter > 0){
+            if (counter > 0){
+                $('#message').children("small").remove();
+            }
+
+            $("#message").append("<small style='color: blue;'>You are spending " +  Math.round(oneMinuteCost) + " $ each minute</small>");
+        } else if ($('#total_videos').val() == "" || $('#video_length').val() == ""  || $('#total_budget').val() == " "){
             $('#message').children("small").remove();
         }
+    });
 
-        $("#message").append("<small style='color: blue;'>You are spending " +  oneMinuteCost + " $ each minute</small>");
+    var counter1 = 0
+    $('#total_videos').on('input', function() {
+
+        if ( $('#total_videos').val() != "" && $('#video_length').val() != ""  && $('#total_budget').val() != ""){
+            counter1 = counter1 + 1;
+            var totalMinutes = $('#total_videos').val() * $('#video_length').val()
+            var totalBudget = $('#total_budget').val();
+
+            var oneMinuteCost = totalBudget/totalMinutes
+
+            if (counter1 > 0){
+                $('#message').children("small").remove();
+            }
+
+            $("#message").append("<small style='color: blue;'>You are spending " +  Math.round(oneMinuteCost) + " $ each minute</small>");
+        } else if ($('#total_videos').val() == "" || $('#video_length').val() == ""  || $('#total_budget').val() == " "){
+            $('#message').children("small").remove();
+        }
+    });
+
+    var counter2 = 0
+    $('#video_length').on('input', function() {
+
+        if ( $('#total_videos').val() != "" && $('#video_length').val() != ""  && $('#total_budget').val() != ""){
+            counter2 = counter2 + 1;
+            var totalMinutes = $('#total_videos').val() * $('#video_length').val()
+            var totalBudget = $('#total_budget').val();
+
+            var oneMinuteCost = totalBudget/totalMinutes
+
+            if (counter2 > 0){
+                $('#message').children("small").remove();
+            }
+
+            $("#message").append("<small style='color: blue;'>You are spending " +  Math.round(oneMinuteCost) + " $ each minute</small>");
+        } else if ($('#total_videos').val() == "" || $('#video_length').val() == ""  || $('#total_budget').val() == " "){
+            $('#message').children("small").remove();
+        }
     });
 
     $('#submit').click(function(e){

@@ -22,6 +22,24 @@ const routes =[
 	},
 	{
 		method: 'GET',
+		path: '/additionalDetail/{objectid}',
+		handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+    			if (err) {
+    				reply({
+    					statusCode: 503,
+    					message: 'no metch found',
+    					data: err
+    				});
+    			}
+    			else{
+    				reply.file("./index1.html");
+    			}
+    		});
+		}
+	},
+	{
+		method: 'GET',
 		path: '/record/{objectid}',
 		handler: (request, reply) =>{
 			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
@@ -51,25 +69,26 @@ const routes =[
     				});
     			}
     			else{
-					var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
-					var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
-					var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
-					var filepath = path.join(__dirname + "/uploads/" , request.params.objectid + '.mp3');
-					var data1 = {
-					  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
-					  to: data['email'],
-					  subject: 'Submited details',
-					  text: "your name is " + data['name'] + ".Your email id is " + data['email'] + " and phone number is " + data['countryCode'] +"-"+ data['phone_number'] + ".",
-					    attachment: filepath
-					};
-					mailgun.messages().send(data1, function (error, body) {
-					  console.log("this is body",body);
-					  if (!error){
-						reply.file("./show.html");
-					  } else {
-					  	console.log(error);
-					  }
-					});
+    				reply.file("./show.html");
+					// var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
+					// var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
+					// var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+					// var filepath = path.join(__dirname + "/uploads/" , request.params.objectid + '.mp3');
+					// var data1 = {
+					//   from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
+					//   to: data['email'],
+					//   subject: 'Submited details',
+					//   text: "your name is " + data['name'] + ".Your email id is " + data['email'] + " and phone number is " + data['countryCode'] +"-"+ data['phone_number'] + ".",
+					//     attachment: filepath
+					// };
+					// mailgun.messages().send(data1, function (error, body) {
+					//   console.log("this is body",body);
+					//   if (!error){
+					// 	reply.file("./show.html");
+					//   } else {
+					//   	console.log(error);
+					//   }
+					// });
     			}
     		});
 		}
@@ -163,6 +182,40 @@ const routes =[
 		}
 	},
 	{
+		method: 'PUT',
+		path: '/update/order/{objectid}',
+		config:{
+			//Include this api in swagger documentation
+			tags: ['api'],
+			description: 'update existing order',
+			notes: 'update existing order',
+			//we use joi plugin to validate the request
+			validate: {
+				params: {
+					objectid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+			FormModel.findByIdAndUpdate({"_id":request.params.objectid}, { $set: { total_budget: request.payload.total_budget,video_length: request.payload.video_length,total_videos: request.payload.total_videos,shoot_cities: request.payload.shoot_cities,interviewed_people: request.payload.interviewed_people}},{ new: true },function (err, data) {
+			  		if (err) {
+	    				reply({
+	    					statusCode: 503,
+	    					message: 'no metch found',
+	    					data: err
+	    				});
+	    			}
+	    			else{
+	    				reply({
+	    					statusCode: 200,
+	    					message: "you have successfully updated your details.",
+	    					data: data
+	    				});
+	    			}	
+			});
+		}
+	},
+	{
 
 	    method: 'POST',
 	    path: '/audio',
@@ -242,10 +295,6 @@ const routes =[
 		method: 'GET',
 		path: '/get/userfile/{objectid}',
 		config: {
-			//include this api in swagger documentation
-			tags: ['api'],
-			description: 'get file of particular user',
-			notes: 'get file of particular user',
 			//we use joi plugin to validate the request
 			validate: {
 				params: {

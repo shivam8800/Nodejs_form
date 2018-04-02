@@ -9,11 +9,11 @@ var FormSchema = new Schema({
 	email:{type:Email, required:true},
 	countryCode: {type:Number,required:true},
 	phone_number: {type:Number, required:true},
-	interviewed_people: {type: Number, required:true},
-	shoot_cities: {type: String, required: true},
-	total_videos: {type: Number, required: true},
-	video_length: {type: Number, required: true},
-	total_budget: {type: Number, required: true}
+	interviewed_people: {type: Number},
+	shoot_cities: {type: String},
+	total_videos: {type: Number},
+	video_length: {type: Number},
+	total_budget: {type: Number}
 });
 
 const Form = mongoose.model('Form', FormSchema)

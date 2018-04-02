@@ -197,6 +197,7 @@ const routes =[
 			}
 		},
 		handler: (request, reply) =>{
+			console.log(request.payload);
 			FormModel.findByIdAndUpdate({"_id":request.params.objectid}, { $set: { total_budget: request.payload.total_budget,video_length: request.payload.video_length,total_videos: request.payload.total_videos,shoot_cities: request.payload.shoot_cities,interviewed_people: request.payload.interviewed_people}},{ new: true },function (err, data) {
 			  		if (err) {
 	    				reply({
@@ -359,43 +360,9 @@ const routes =[
 			notes: 'get list of all cities of whole world'
 		},
 		handler: (request, reply) =>{
-
-			const options = {
-			  uri: 'https://en.wikipedia.org/wiki/Lists_of_cities_by_country',
-			  transform: function (body) {
-			    return cheerio.load(body);
-			  }
-			}
-
-			rp(options)
-			  .then(($) => {
-			    $('b').each(function(i, elem){
-			    	if (i == 5 ){
-				    	var word = $(this).text();
-				    	var new_word = "";
-						for(var j = 0; j < word.length;j++){
-							if (word[j] == " "){
-							    new_word = new_word + "_";
-							} else {
-							    new_word = new_word + word[j];
-							}
-						}
-						var city_url = 'https://en.wikipedia.org/wiki/' + new_word
-
-						request1(city_url, function (error, response, html) {
-						  if (!error && response.statusCode == 200) {
-						        var $ = cheerio.load(html);
-						        console.log($('table tbody tr td a').html()	);
-						  }
-						});
-						
-			    	}
-			    });
-			    reply($('b').html());
-			  })
-			  .catch((err) => {
-			    console.log(err);
-			  });
+			var file = path.join(__dirname + '/cities.txt' );
+			var array = fs.readFileSync(file).toString().split("\n");
+			reply(array);
 		}
 	}
 ]

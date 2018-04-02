@@ -68,22 +68,23 @@ $(document).ready(function(){
 	            return obj;
 	        }, {});
 	        console.log(formModel);
+	        console.log($('.ms-sel-item').text());
 	        if(!$("#order_form1").valid()){
 	            alert("Please correct the indicated fields")
 	            return
 	        }
-	        $.ajax({
-	            url : "http://127.0.0.1:8080/update/order/" + objectid,
-	            type : "PUT",
-	            data : formModel,
-	            success : function(json){
-	                window.localStorage.setItem('objectid', json['data']['_id']);
-	                window.location = "/record/" + json['data']['_id'];
-	            },
-	            error : function(err){
-	                alert(err);
-	            }
-	        });
+	        // $.ajax({
+	        //     url : "http://127.0.0.1:8080/update/order/" + objectid,
+	        //     type : "PUT",
+	        //     data : formModel,
+	        //     success : function(json){
+	        //         window.localStorage.setItem('objectid', json['data']['_id']);
+	        //         window.location = "/record/" + json['data']['_id'];
+	        //     },
+	        //     error : function(err){
+	        //         alert(err);
+	        //     }
+	        // });
 		});
    
 });

@@ -14,7 +14,7 @@ $(document).ready(function(){
 	              $('#country_code').val(result['data']['0']['countryCode']);
 	              $('#phonnumber').val(result['data']['0']['phone_number']);
 	              $('#interviewed_people').val(result['data']['0']['interviewed_people']);
-	              $('#shoot_cities').val(result['data']['0']['shoot_cities']);
+	              $('#ms1').val(result['data']['0']['shoot_cities']);
 	              $('#total_videos').val(result['data']['0']['total_videos']);
 	              $('#video_length').val(result['data']['0']['video_length'].toString() + " minutes");
 	              $('#total_budget').val(result['data']['0']['total_budget']);

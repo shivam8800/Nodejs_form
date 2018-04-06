@@ -197,8 +197,10 @@ const routes =[
 			}
 		},
 		handler: (request, reply) =>{
-			console.log(request.payload);
-			FormModel.findByIdAndUpdate({"_id":request.params.objectid}, { $set: { total_budget: request.payload.total_budget,video_length: request.payload.video_length,total_videos: request.payload.total_videos,shoot_cities: request.payload.shoot_cities,interviewed_people: request.payload.interviewed_people}},{ new: true },function (err, data) {
+			const mainData = JSON.parse(request.payload.formModel);
+			console.log(mainData.shoot_cities);
+
+			FormModel.findByIdAndUpdate({"_id":request.params.objectid}, { $set: { total_budget: mainData.total_budget,video_length: mainData.video_length,total_videos: mainData.total_videos,shoot_cities: mainData.shoot_cities,interviewed_people: mainData.interviewed_people}},{ new: true },function (err, data) {
 			  		if (err) {
 	    				reply({
 	    					statusCode: 503,

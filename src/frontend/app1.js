@@ -64,11 +64,7 @@ $(document).ready(function(){
 	    $("#order_form1").validate();
 	    $('#submit1').click(function(e){
 	    	var formModel = $('#order_form1').serializeObject();
-	    	console.log(formModel);
-	    	// var formModel = $('#order_form1').serializeArray().reduce(function(obj, item) {
-	     //        obj[item.name] = item.value;
-	     //        return obj;
-	     //    }, {});
+	    	// console.log(formModel);
 
 	        if(!$("#order_form1").valid()){
 	            alert("Please correct the indicated fields")
@@ -78,10 +74,10 @@ $(document).ready(function(){
 	        $.ajax({
 	            url : "http://127.0.0.1:8080/update/order/" + objectid,
 	            type : "PUT",
-	            data : formModel,
+	            data : { formModel: JSON.stringify(formModel)},
 	            success : function(json){
 	                window.localStorage.setItem('objectid', json['data']['_id']);
-	                // window.location = "/record/" + json['data']['_id'];
+	                window.location = "/record/" + json['data']['_id'];
 	            },
 	            error : function(err){
 	                alert(err);

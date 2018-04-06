@@ -161,9 +161,8 @@ const routes =[
 			notes: 'submit a new form'
 		},
 		handler: (request, reply) =>{
-			//create a mongodb form object	to save it into database
 			var form = new FormModel(request.payload);
-			//call save method to save it and pass call back method to handel a error
+			
 			form.save(function(err, data){
 				if (err){
 					// console.log(err)
@@ -198,9 +197,16 @@ const routes =[
 		},
 		handler: (request, reply) =>{
 			const mainData = JSON.parse(request.payload.formModel);
-			console.log(mainData.shoot_cities);
 
-			FormModel.findByIdAndUpdate({"_id":request.params.objectid}, { $set: { total_budget: mainData.total_budget,video_length: mainData.video_length,total_videos: mainData.total_videos,shoot_cities: mainData.shoot_cities,interviewed_people: mainData.interviewed_people}},{ new: true },function (err, data) {
+			FormModel.findByIdAndUpdate(
+				{"_id":request.params.objectid},
+				{ $set: 
+					{ total_budget: mainData.total_budget,
+					  video_length: mainData.video_length,
+					  total_videos: mainData.total_videos,
+					  shoot_cities: mainData.shoot_cities,
+					  interviewed_people: mainData.interviewed_people}},
+				{ new: true },function (err, data) {
 			  		if (err) {
 	    				reply({
 	    					statusCode: 503,

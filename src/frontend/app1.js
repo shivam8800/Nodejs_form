@@ -64,7 +64,6 @@ $(document).ready(function(){
 	    $("#order_form1").validate();
 	    $('#submit1').click(function(e){
 	    	var formModel = $('#order_form1').serializeObject();
-	    	// console.log(formModel);
 
 	        if(!$("#order_form1").valid()){
 	            alert("Please correct the indicated fields")

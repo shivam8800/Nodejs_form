@@ -26,7 +26,7 @@ $(document).ready(function(){
 					$('#interviewed_people').val(result['data']['0']['interviewed_people']);
 					$('#total_videos').val(result['data']['0']['total_videos']);
 					$('#video_length').val(result['data']['0']['video_length'].toString() + " minutes");
-					$('#total_budget').val(result['data']['0']['total_budget']);
+					$('#total_budget').val(result['data']['0']['total_budget'].toString() + " $");
 					var audio = document.getElementById('getaudio');
 					audio.src = 'http://127.0.0.1:8080/get/userfile/' + objectid
 	          },

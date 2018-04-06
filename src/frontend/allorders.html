@@ -33,11 +33,11 @@
         </form>
       </div>
     </nav>
-  <div class="container panel panel-primary">
-
-	  <h2>Filterable Table</h2>
-	  <p>Type something in the input field to search the table for first names, last names or emails:</p>
-	  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>
+    <div style="padding: 2%;">    	
+  <div class="panel panel-primary">
+	  <h2>All Orders</h2>
+	  <p>Type something in the input field to search the table for names, cities or emails:</p>
+	  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" style="margin-bottom: 1%;">Filter order</button>
 	  <div id="demo" class="collapse"> 
 	  	<input class="form-control" id="myInput" type="text" placeholder="Filter..">
 	  </div>
@@ -45,35 +45,37 @@
 	  <table class="table table-hover table-bordered">
 	  <thead>
 	    <tr>
-	      <th scope="col">#</th>
-	      <th scope="col">First</th>
-	      <th scope="col">Last</th>
-	      <th scope="col">Handle</th>
+	      <th scope="col">S.no</th>
+	      <th scope="col">Name</th>
+	      <th scope="col">Audio recording</th>
+	      <th scope="col">Email id</th>
+	      <th scope="col">Contact Number</th>
+	      <th scope="col">Interviewed People</th>
+	      <th scope="col">Shoot Cities</th>
+	      <th scope="col">Total Videos</th>
+	      <th scope="col">Length of a Video</th>
+	      <th scope="col">Total Budget</th>
 	    </tr>
 	  </thead>
 	  <tbody id="myTable">
 	    <tr>
-	      <th scope="row">1</th>
-	      <td>Mark</td>
-	      <td>Otto</td>
-	      <td>@mdo</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">2</th>
-	      <td>Jacob</td>
-	      <td>Thornton</td>
-	      <td>@fat</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">3</th>
-	      <td>@twitter</td>
-	      <td>@twitter</td>
-	      <td>@twitter</td>
+	      <th>1</th>
+	      <td>Shivam</td>
+	      <td><p><audio id="getaudio" src="http://127.0.0.1:8080/get/userfile/5ac7283c8e0c953e64ae9d50" controls></audio></p></td>
+	      <td>shivam16@navgurukul.org</td>
+	      <td>918800710932</td>
+	      <td>4</td>
+	      <td>delhi,mumbai</td>
+	      <td>6</td>
+	      <td>3 minutes</td>
+	      <td>44 $</td>
 	    </tr>
 	  </tbody>
 	</table>
 
 	<a href="http://127.0.0.1:8080"><button type="button" id="submit" name="submit" class="btn btn-primary float-right">Back</button></a>
+    </div>
+
 </div>
 	
 

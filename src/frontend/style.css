@@ -196,3 +196,10 @@ input:empty {
   display: flex;
   flex-direction: row;
 }
+.center {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh;
+}

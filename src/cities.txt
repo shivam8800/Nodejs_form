@@ -1,6 +1,7 @@
 Kabul
 Kandahar
 Herat
+banglore
 Mazar-i-Sharif
 Jalalabad
 Kunduz

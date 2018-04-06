@@ -10,7 +10,7 @@ var FormSchema = new Schema({
 	countryCode: {type:Number,required:true},
 	phone_number: {type:Number, required:true},
 	interviewed_people: {type: Number},
-	shoot_cities: {type: String},
+	shoot_cities: {type: Array},
 	total_videos: {type: Number},
 	video_length: {type: Number},
 	total_budget: {type: Number}

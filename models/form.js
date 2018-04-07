@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 
 var FormSchema = new Schema({
 	name: {type:String, required:true},
-	email:{type:Email, required:true},
+	email:{type:mongoose.SchemaTypes.Email, required:true},
 	countryCode: {type:Number,required:true},
 	phone_number: {type:Number, required:true},
 	interviewed_people: {type: Number},

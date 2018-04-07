@@ -18,7 +18,7 @@ $(document).ready(function(){
 	          			}	
 	          		}
 
-          			trHTML = "<tr><th>" + i + "</th><td>"+ result['data'][i]["name"] + "</td><td><p><audio id='getaudio' src='http://127.0.0.1:8080/get/userfile/" + result['data'][i]["_id"]+"' controls></audio></p></td><td>"+ result['data'][i]["email"] +"</td><td>"+result['data'][i]["countryCode"] +"-"+result['data'][i]["phone_number"] +"</td><td>"+result['data'][i]["interviewed_people"]+"</td><td>"+finalcities+"</td><td>"+result['data'][i]["total_videos"]+"</td><td>"+result['data'][i]["video_length"] +"minutes</td><td>"+result['data'][i]["total_budget"] +"$</td></tr>"
+          			trHTML = "<tr><th>" + i + "</th><td>"+result['data'][i]["projectName"] +"</td><td>"+ result['data'][i]["name"] + "</td><td><p><audio id='getaudio' src='http://127.0.0.1:8080/get/userfile/" + result['data'][i]["_id"]+"' controls></audio></p></td><td>"+ result['data'][i]["email"] +"</td><td>"+result['data'][i]["countryCode"] +"-"+result['data'][i]["phone_number"] +"</td><td>"+result['data'][i]["interviewed_people"]+"</td><td>"+finalcities+"</td><td>"+result['data'][i]["total_videos"]+"</td><td>"+result['data'][i]["video_length"] +"minutes</td><td>"+result['data'][i]["total_budget"] +"$</td></tr>"
   	        		$('#myTable').append(trHTML);
 	          		
 	      		}

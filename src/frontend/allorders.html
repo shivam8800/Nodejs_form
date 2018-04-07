@@ -33,7 +33,7 @@
         </form>
       </div>
     </nav>
-    <div style="padding: 1%;">    	
+    <div style="padding: 2%; overflow-wrap: scroll;">    	
   <div class="panel panel-primary">
 	  <h2>All Orders</h2>
 	  <p>Type something in the input field to search the table for names, cities or emails:</p>
@@ -42,10 +42,11 @@
 	  	<input class="form-control" id="myInput" type="text" placeholder="Filter..">
 	  </div>
 
-	  <table class="table table-hover table-bordered">
+	  <table class="table table-hover table-bordered" style="table-layout:fixed;">
 	  <thead>
 	    <tr>
 	      <th scope="col">S.no</th>
+        <th scope="col">Project Name</th>
 	      <th scope="col">Name</th>
 	      <th scope="col">Audio recording</th>
 	      <th scope="col">Email id</th>

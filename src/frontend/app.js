@@ -1,5 +1,13 @@
 $(document).ready(function(){
 
+    if (localStorage.getItem('name') != ""){
+        $("#name").val(localStorage.getItem('name'));
+        $("#email").val(localStorage.getItem('email'));
+        $("#countryCode").val(localStorage.getItem('countryCode'));
+        $("#phonnumber").val(localStorage.getItem('phone_number'));
+        console.log(localStorage.getItem("name"));
+    }
+
     $("#order_form").validate();
     
     $('#submit').click(function(e){

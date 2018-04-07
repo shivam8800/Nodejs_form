@@ -63,28 +63,26 @@ $(document).ready(function(){
 		var objectid = localStorage.getItem('objectid')		
 	    $("#order_form1").validate();
 	    $('#submit1').click(function(e){
-            var formModel = $('#order_form1').serializeArray().reduce(function(obj, item) {
-	            obj[item.name] = item.value;
-	            return obj;
-	        }, {});
-	        console.log(formModel);
-	        console.log($('.ms-sel-item').text());
+	    	var formModel = $('#order_form1').serializeObject();
+	    	// console.log(formModel);
+
 	        if(!$("#order_form1").valid()){
 	            alert("Please correct the indicated fields")
 	            return
 	        }
-	        // $.ajax({
-	        //     url : "http://127.0.0.1:8080/update/order/" + objectid,
-	        //     type : "PUT",
-	        //     data : formModel,
-	        //     success : function(json){
-	        //         window.localStorage.setItem('objectid', json['data']['_id']);
-	        //         window.location = "/record/" + json['data']['_id'];
-	        //     },
-	        //     error : function(err){
-	        //         alert(err);
-	        //     }
-	        // });
+
+	        $.ajax({
+	            url : "http://127.0.0.1:8080/update/order/" + objectid,
+	            type : "PUT",
+	            data : { formModel: JSON.stringify(formModel)},
+	            success : function(json){
+	                window.localStorage.setItem('objectid', json['data']['_id']);
+	                window.location = "/record/" + json['data']['_id'];
+	            },
+	            error : function(err){
+	                alert(err);
+	            }
+	        });
 		});
    
 });

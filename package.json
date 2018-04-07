@@ -25,6 +25,7 @@
     "cheerio": "^1.0.0-rc.2",
     "cheerio-tableparser": "^1.0.1",
     "cool-ascii-faces": "1.3.3",
+    "form-serializer": "^2.5.0",
     "fs": "0.0.1-security",
     "hapi": "^16.6.2",
     "hapi-swagger": "^7.8.1",

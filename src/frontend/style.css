@@ -11,6 +11,10 @@ td { overflow:overlay;white-space:nowrap;  }
 	border: 1px solid GREY;
 	}
 
+#signup:hover{
+  cursor: pointer;
+}
+
 body {
   font-family: Courier, 'Courier New', monospace;
   padding: 1em 2em;

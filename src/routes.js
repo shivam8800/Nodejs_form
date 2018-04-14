@@ -30,6 +30,13 @@ const routes =[
 	},
 	{
 	method: 'GET',
+	path: '/login',
+	handler: (request, reply) =>{
+			reply.file("vendor_pages/login.html");
+		}
+	},
+	{
+	method: 'GET',
 	path: '/vendor_pages/{filename}',
 	handler: (request, reply) =>{
 			if (request.params.filename.split('.').pop() == 'html') {
@@ -431,7 +438,7 @@ const routes =[
             validate:{
                 payload:{
                     email:Joi.string(),
-                    password:Joi.string()
+                    otp:Joi.string()
                 }
             }
         },
@@ -446,7 +453,7 @@ const routes =[
                         'data': "user does not exist!"
                     });
                 } else {
-                    if (request.payload.password == data[0]['password']){
+                    if (request.payload.otp == data[0]['otp']){
                         var username =request.payload.username;
                         const token = jwt.sign({
                             email,

@@ -18,7 +18,8 @@ $(document).ready(function(){
 	          			finalcities = finalcities + cities[i] + ","
 	          			}	
 	          		}
-					$('#shoot_cities').val(finalcities);        		
+					$('#shoot_cities').val(finalcities);
+					$('#projectName').val(result['data']['0']['projectName']);  		
 					$('#name1').val(result['data']['0']['name']);
 					$('#email').val(result['data']['0']['email']);
 					$('#country_code').val(result['data']['0']['countryCode']);
@@ -26,9 +27,14 @@ $(document).ready(function(){
 					$('#interviewed_people').val(result['data']['0']['interviewed_people']);
 					$('#total_videos').val(result['data']['0']['total_videos']);
 					$('#video_length').val(result['data']['0']['video_length'].toString() + " minutes");
-					$('#total_budget').val(result['data']['0']['total_budget']);
+					$('#total_budget').val(result['data']['0']['total_budget'].toString() + " $");
 					var audio = document.getElementById('getaudio');
 					audio.src = 'http://127.0.0.1:8080/get/userfile/' + objectid
+
+					window.localStorage.setItem('name', result['data']['0']['name']);
+					window.localStorage.setItem('email', result['data']['0']['email']);
+					window.localStorage.setItem('countryCode', result['data']['0']['countryCode']);
+					window.localStorage.setItem('phone_number', result['data']['0']['phone_number']);
 	          },
 	          error : function(err){
 	              alert(err);

@@ -1,5 +1,6 @@
 const db = require('../database').db;
 var FormModel = require('../models/form');
+var UserModel = require('../models/user');
 const Joi = require('joi');
 
 import fs from 'fs'
@@ -17,7 +18,19 @@ const routes =[
 	method: 'GET',
 	path: '/',
 	handler: (request, reply) =>{
-			reply.file("./index.html");
+			reply.file("index.html");
+		}
+	},
+	{
+	method: 'GET',
+	path: '/vendor_pages/{filename}',
+	handler: (request, reply) =>{
+			if (request.params.filename.split('.').pop() == 'html') {
+	        	 	return null 
+	        	}
+	        	else {
+	        		 reply.file('./vendor_pages/' + request.params.filename);	            
+	        }
 		}
 	},
 	{
@@ -161,9 +174,8 @@ const routes =[
 			notes: 'submit a new form'
 		},
 		handler: (request, reply) =>{
-			//create a mongodb form object	to save it into database
 			var form = new FormModel(request.payload);
-			//call save method to save it and pass call back method to handel a error
+			
 			form.save(function(err, data){
 				if (err){
 					// console.log(err)
@@ -198,9 +210,16 @@ const routes =[
 		},
 		handler: (request, reply) =>{
 			const mainData = JSON.parse(request.payload.formModel);
-			console.log(mainData.shoot_cities);
 
-			FormModel.findByIdAndUpdate({"_id":request.params.objectid}, { $set: { total_budget: mainData.total_budget,video_length: mainData.video_length,total_videos: mainData.total_videos,shoot_cities: mainData.shoot_cities,interviewed_people: mainData.interviewed_people}},{ new: true },function (err, data) {
+			FormModel.findByIdAndUpdate(
+				{"_id":request.params.objectid},
+				{ $set: 
+					{ total_budget: mainData.total_budget,
+					  video_length: mainData.video_length,
+					  total_videos: mainData.total_videos,
+					  shoot_cities: mainData.shoot_cities,
+					  interviewed_people: mainData.interviewed_people}},
+				{ new: true },function (err, data) {
 			  		if (err) {
 	    				reply({
 	    					statusCode: 503,
@@ -366,7 +385,82 @@ const routes =[
 			var array = fs.readFileSync(file).toString().split("\n");
 			reply(array);
 		}
-	}
+	},
+	{
+		method:'POST',
+		path: '/create/newuser',
+		config:{
+			tags: ['api'],
+			description: 'create a new user',
+			notes: 'create a new user',
+		},
+		handler: (request, reply) =>{
+			var user = new UserModel(request.payload);
+        
+			user.save(function(err, data){
+				if (err){
+					reply({
+						statusCode: 503,
+						message: err
+					});
+				} else {
+					reply({
+						statusCode: 201,
+						message: 'User created successfully!',
+						data: data
+					});
+				}
+			});
+		}
+	},
+	 {
+        method:'POST',
+        path:'/auth',
+        config:{
+            //include this route in swagger documentation
+            tags:['api'],
+            description:"authenticate a user",
+            notes:"authenticate a user",
+            validate:{
+                payload:{
+                    email:Joi.string(),
+                    password:Joi.string()
+                }
+            }
+        },
+        handler: function(request, reply){
+            UserModel.find({'email': request.payload.email}, function(err, data){
+                if (err){
+                    reply({
+                        'error': err
+                    });
+                } else if (data.length ==0){
+                    reply({
+                        'data': "user does not exist!"
+                    });
+                } else {
+                    if (request.payload.password == data[0]['password']){
+                        var username =request.payload.username;
+                        const token = jwt.sign({
+                            email,
+                            userid:data[0]['_id'],
+    
+                        },'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy', {
+                            algorithm: 'HS256',
+                            expiresIn: '1h',
+                        });
+    
+                         reply( {
+                            token,
+                            userid: data[0]['_id'],
+                            data: 'success'
+                        } );
+                    }
+                }
+            })
+
+        }
+    },
 ]
 
 export default routes;

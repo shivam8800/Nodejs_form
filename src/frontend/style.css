@@ -1,4 +1,5 @@
-
+table tr { height:1em;  }
+td { overflow:overlay;white-space:nowrap;  } 
 .red{
     color:red;
     }
@@ -195,4 +196,11 @@ input:empty {
 .line{
   display: flex;
   flex-direction: row;
+}
+.center {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh;
 }

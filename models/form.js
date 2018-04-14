@@ -5,6 +5,7 @@ const Email = require('mongoose-type-mail');
 var Schema = mongoose.Schema;
 
 var FormSchema = new Schema({
+	projectName: {type:String, required:true},
 	name: {type:String, required:true},
 	email:{type:mongoose.SchemaTypes.Email, required:true},
 	countryCode: {type:Number,required:true},

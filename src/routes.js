@@ -1,5 +1,6 @@
 const db = require('../database').db;
 var FormModel = require('../models/form');
+var UserModel = require('../models/user');
 const Joi = require('joi');
 
 import fs from 'fs'
@@ -371,6 +372,33 @@ const routes =[
 			var file = path.join(__dirname + '/cities.txt' );
 			var array = fs.readFileSync(file).toString().split("\n");
 			reply(array);
+		}
+	},
+	{
+		method:'POST',
+		path: '/create/newuser',
+		config:{
+			tags: ['api'],
+			description: 'create a new user',
+			notes: 'create a new user',
+		},
+		handler: (request, reply) =>{
+			var user = new UserModel(request.payload);
+
+			user.save(function(err, data){
+				if (err){
+					reply({
+						statusCode: 503,
+						message: err
+					});
+				} else {
+					reply({
+						statusCode: 201,
+						message: 'User created successfully!',
+						data: data
+					});
+				}
+			});
 		}
 	}
 ]

@@ -3,7 +3,7 @@ import routes from './routes'
 import Inert from 'inert';
 import Vision from 'vision';
 var Path = require('path');
-
+import jwt from 'jsonwebtoken'
 
 const server = new Hapi.Server({
     connections: {
@@ -40,6 +40,18 @@ server.register([
 	});
 
 server.log('info', 'View configuration completed')
+
+server.register( require( 'hapi-auth-jwt' ), ( err ) => {
+    server.auth.strategy( 'token', 'jwt', {
+
+        key: 'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy',
+
+        verifyOptions: {
+            algorithms: [ 'HS256' ],
+        }
+
+    } );
+} );
 
 server.register(require('inert'), (err) => {
 

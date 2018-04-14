@@ -384,7 +384,7 @@ const routes =[
 		},
 		handler: (request, reply) =>{
 			var user = new UserModel(request.payload);
-
+        
 			user.save(function(err, data){
 				if (err){
 					reply({
@@ -400,7 +400,55 @@ const routes =[
 				}
 			});
 		}
-	}
+	},
+	 {
+        method:'POST',
+        path:'/auth',
+        config:{
+            //include this route in swagger documentation
+            tags:['api'],
+            description:"authenticate a user",
+            notes:"authenticate a user",
+            validate:{
+                payload:{
+                    email:Joi.string(),
+                    password:Joi.string()
+                }
+            }
+        },
+        handler: function(request, reply){
+            UserModel.find({'email': request.payload.email}, function(err, data){
+                if (err){
+                    reply({
+                        'error': err
+                    });
+                } else if (data.length ==0){
+                    reply({
+                        'data': "user does not exist!"
+                    });
+                } else {
+                    if (request.payload.password == data[0]['password']){
+                        var username =request.payload.username;
+                        const token = jwt.sign({
+                            email,
+                            userid:data[0]['_id'],
+    
+                        },'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy', {
+                            algorithm: 'HS256',
+                            expiresIn: '1h',
+                        });
+    
+                         reply( {
+                            token,
+                            userid: data[0]['_id'],
+                            data: 'success'
+                        } );
+                    }
+                }
+            })
+
+        }
+    },
 ]
 
 export default routes;

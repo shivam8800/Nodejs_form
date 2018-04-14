@@ -37,6 +37,7 @@
     "mailgun-js": "^0.16.0",
     "mongoose": "^4.12.1",
     "mongoose-type-mail": "^1.0.0",
+    "nodemon": "^1.17.3",
     "path": "^0.12.7",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",

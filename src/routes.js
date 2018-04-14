@@ -18,7 +18,19 @@ const routes =[
 	method: 'GET',
 	path: '/',
 	handler: (request, reply) =>{
-			reply.file("./index.html");
+			reply.file("index.html");
+		}
+	},
+	{
+	method: 'GET',
+	path: '/vendor_pages/{filename}',
+	handler: (request, reply) =>{
+			if (request.params.filename.split('.').pop() == 'html') {
+	        	 	return null 
+	        	}
+	        	else {
+	        		 reply.file('./vendor_pages/' + request.params.filename);	            
+	        }
 		}
 	},
 	{

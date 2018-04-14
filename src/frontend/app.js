@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+    $('#signup').click(function(e){
+        window.location = "http://127.0.0.1:8080/vendor_pages/signup.html"
+    });
+
     if (localStorage.getItem('name') != ""){
         $("#name").val(localStorage.getItem('name'));
         $("#email").val(localStorage.getItem('email'));

@@ -23,6 +23,13 @@ const routes =[
 	},
 	{
 	method: 'GET',
+	path: '/signup',
+	handler: (request, reply) =>{
+			reply.file("vendor_pages/signup.html");
+		}
+	},
+	{
+	method: 'GET',
 	path: '/vendor_pages/{filename}',
 	handler: (request, reply) =>{
 			if (request.params.filename.split('.').pop() == 'html') {

@@ -473,6 +473,61 @@ const routes =[
 		}
 	},
 	{
+		method: 'PUT',
+		path: '/resend/otp/{objectid}',
+		config:{
+			//Include this api in swagger documentation
+			tags: ['api'],
+			description: 'resend otp to user',
+			notes: 'resend otp to user',
+			//we use joi plugin to validate the request
+			validate: {
+				params: {
+					objectid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+			var otp = Math.floor(Math.random()*90000) + 10000;
+        
+        	var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
+			var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
+			var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+			var data1 = {
+			  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
+			  to: request.payload.email,
+			  subject: 'Verify your OTP ',
+			  text: "This is your resended OTP  code " + otp  +". \n Enter it In your OTP section input"
+			};
+
+			mailgun.messages().send(data1, function (error, body) {
+			  if (!error){
+				  	UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {otp: otp}},
+						{ new: true },function (err, data) {
+					  		if (err) {
+			    				reply({
+			    					statusCode: 503,
+			    					message: 'error was handled',
+			    					data: err
+			    				});
+			    			}
+			    			else{
+			    				reply({
+			    					statusCode: 200,
+			    					message: "we have resend otp.",
+			    					data: data
+			    				});
+			    			}	
+					});
+
+			  } else {
+			  	console.log(error);
+			  	throw error
+			  }
+			});
+		}
+	},
+	{
 		method: 'DELETE',
 		path: '/delete/user/{email}',
 		config:{

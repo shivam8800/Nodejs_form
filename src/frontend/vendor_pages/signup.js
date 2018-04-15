@@ -17,6 +17,8 @@ $(document).ready(function(){
             type : "POST",
             data : userModel,
             success : function(json){
+                window.localStorage.setItem('objectid', json['data']['_id']);
+                window.localStorage.setItem('email', $('#email').val());
                 window.location = "http://127.0.0.1:8080/otp/" + json["data"]['_id'] 
             },
             error : function(err){

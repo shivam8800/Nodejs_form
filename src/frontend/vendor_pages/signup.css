@@ -14,3 +14,12 @@
 .error{
   color: red;
 }
+
+#resend_otp{
+  color: blue;
+  cursor: pointer;
+}
+
+#resend_otp:hover{
+     text-decoration-line: underline; 
+}

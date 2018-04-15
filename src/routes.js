@@ -454,6 +454,43 @@ const routes =[
 			
 		}
 	},
+	{
+		method: 'DELETE',
+		path: '/delete/user/{email}',
+		config:{
+			//include this api in swagger documentation
+			tags: ['api'],
+			description: 'delete a user',
+			notes: 'delete a user',
+			validate:{
+				params:{
+					email: Joi.string()
+				}
+			}
+		},
+		handler: function(request, reply){
+			UserModel.findOneAndRemove({'email': request.params.email}, function(err, data){
+				if (err){
+					reply({
+						statusCode: 503,
+						message: err
+					})
+				} else if (data === null ){
+                    reply({
+                        statusCode:200,
+                        message:"user does not exist",
+                        data:data
+                    });
+                } 
+				else {
+					reply({
+						statusCode: 201,
+						message: 'User deleted successfully'
+					})
+				}
+			});
+		}
+	},
 	 {
         method:'POST',
         path:'/auth',

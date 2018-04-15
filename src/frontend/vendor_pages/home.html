@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>OTP Form</title>
+  <title> Home</title>
     <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/vendor_pages/signup.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
     <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
@@ -17,12 +17,11 @@
         <div class="form-area">
             <form id="otp_form" role="form">
             <br style="clear:both">
-                        <h3 style="margin-bottom: 25px; text-align: center;">Enter OTP</h3>
+                        <h3 style="margin-bottom: 25px; text-align: center;">Upload a File</h3>
               <div class="form-group" style="margin-bottom: 5%;">
-                <input type="text" class="form-control" id="OTP" name="OTP" placeholder="Enter your OTP" required>
+                <input type="file" class="form-control" id="file" name="file" required>
               </div>
 
-                <p id="resend_otp" class="float-left">Send OTP Again ?</p>
                 <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Submit </button>
             </form>
         </div>
@@ -30,7 +29,7 @@
   </div>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://127.0.0.1:8080/vendor_pages/otp.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8080/vendor_pages/home.js"></script>
 
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>

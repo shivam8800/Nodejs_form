@@ -4,7 +4,7 @@ $(document).ready(function(){
    
        $('#resend_otp').click(function(e){
             $.ajax({
-                url : "http://127.0.0.1:8080/resend/otp/" + objectid,
+                url : "/resend/otp/" + objectid,
                 type : "PUT",
                 data : {email: localStorage.getItem('email')},
                 success : function(json){
@@ -14,5 +14,23 @@ $(document).ready(function(){
                     alert(err);
                 }
             });
-    })
+    });
+
+    $('#submit').click(function(e){
+        $.ajax({
+                url : "/auth",
+                type : "POST",
+                data : {email: localStorage.getItem('email'), otp: $('#OTP').val()},
+                success : function(json){
+                    console.log(json['data']['0']['_id']);
+                    if (json['status'] == "success"){
+                        window.location = "http://127.0.0.1:8080/loggedin/home/" + json['data']['0']['_id']                     
+                    }
+                },
+                error : function(err){
+                    alert(err);
+                }
+            });
+    });
+
 });

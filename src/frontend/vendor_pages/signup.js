@@ -17,7 +17,7 @@ $(document).ready(function(){
             type : "POST",
             data : userModel,
             success : function(json){
-                console.log(json);
+                window.location = "http://127.0.0.1:8080/otp/" + json["data"]['_id'] 
             },
             error : function(err){
                 alert(err);

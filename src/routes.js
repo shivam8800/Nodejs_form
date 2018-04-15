@@ -37,6 +37,24 @@ const routes =[
 	},
 	{
 	method: 'GET',
+	path: '/otp/{objectid}',
+	handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else{
+					reply.file("vendor_pages/otp.html");
+				}
+			});
+		}
+	},
+	{
+	method: 'GET',
 	path: '/vendor_pages/{filename}',
 	handler: (request, reply) =>{
 			if (request.params.filename.split('.').pop() == 'html') {

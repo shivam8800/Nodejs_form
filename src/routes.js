@@ -409,22 +409,49 @@ const routes =[
 			notes: 'create a new user',
 		},
 		handler: (request, reply) =>{
-			var user = new UserModel(request.payload);
+			var otp = Math.floor(Math.random()*90000) + 10000;
         
-			user.save(function(err, data){
-				if (err){
-					reply({
-						statusCode: 503,
-						message: err
+        	var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
+			var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
+			var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+			var data1 = {
+			  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
+			  to: request.payload.email,
+			  subject: 'Verify your OTP ',
+			  text: "This is your OTP code " + otp  +". \n Enter it In your OTP section input"
+			};
+
+			mailgun.messages().send(data1, function (error, body) {
+			  if (!error){
+				  	var user = new UserModel({
+						"username": request.payload.username,
+						"email": request.payload.email,
+						"phone_number": request.payload.phone_number,
+						"otp": otp
 					});
-				} else {
-					reply({
-						statusCode: 201,
-						message: 'User created successfully!',
-						data: data
+
+					user.save(function(err, data){
+						if (err){
+							reply({
+								statusCode: 503,
+								message: err
+							});
+						} else {
+							reply({
+								statusCode: 201,
+								message: 'User created successfully!',
+								data: data
+							});
+						}
 					});
-				}
+
+			  } else {
+			  	console.log(error);
+			  	throw error
+			  }
 			});
+
+			
 		}
 	},
 	 {

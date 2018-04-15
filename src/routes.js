@@ -584,6 +584,47 @@ const routes =[
 		}	
 	},
 	{
+		path:'/get/userdetail/{email}',
+        method:'GET',
+        config:{
+            //include this route in swagger documentation
+            tags:['api'],
+            description:"get user detail",
+            notes:"get user detail",
+            validate:{
+                //jobtitile is required field
+                params:{
+                    email:Joi.string().required()
+                }
+            }
+        },
+        handler: (request, reply) =>{
+            UserModel.find({"email":request.params.email}, function(err, data){
+                if(err){
+                    reply({
+                        statusCode:503,
+                        message:"Failed to get data",
+                        data:err
+                    });
+                }
+                else if (data.length === 0 ){
+                    reply({
+                        statusCode:200,
+                        message:"user does not exist",
+                        data:data
+                    });
+                }
+                else {
+                    reply({
+                        statusCode:200,
+                        message:"user detail Successfully Fetched",
+                        data:data
+                    });
+                }
+            });
+        }
+	},
+	{
 		method: 'DELETE',
 		path: '/delete/user/{email}',
 		config:{

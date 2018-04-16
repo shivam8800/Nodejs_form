@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Signup Form</title>
+  <title>Login Form</title>
     <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/vendor_pages/signup.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
     <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
 
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
-
 
 </head>
 
@@ -17,29 +16,23 @@
   <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
     <div class="col-md-6">
         <div class="form-area">
-            <form id="signup_form" role="form">
+            <form id="order_form1" role="form">
             <br style="clear:both">
-                        <h3 style="margin-bottom: 25px; text-align: center;">Signup Form</h3>
-              <div class="form-group">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Choose your username" required>
-              </div>
+                        <h3 style="margin-bottom: 25px; text-align: center;">Login Form</h3>
 
-              <div class="form-group">
+              <div class="form-group" style="margin-bottom: 5%;">
                 <input type="email" class="form-control" id="email" name="email" placeholder="Type your email id" required>
               </div>
 
-              <div class="form-group" style="margin-bottom: 8%;">
-                <input type="number" class="form-control" id="phone_number" name="phone_number" placeholder="Type your contact number " required>
-              </div>
-                <a href="http://127.0.0.1:8080/login">Already have an account ?</a>
-                <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Submit </button>
+                <a href="http://127.0.0.1:8080/signup"><button type="button" id="signup" name="signup" class="btn btn-primary float-left"> Signup </button></a>
+                <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Log In </button>
             </form>
         </div>
     </div>
   </div>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://127.0.0.1:8080/vendor_pages/signup.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8080/vendor_pages/login.js"></script>
 
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>

@@ -11,7 +11,7 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 
 var request1 = require('request');
-
+// import jwt from 'jsonwebtoken';
 
 const routes =[
 	{
@@ -26,6 +26,31 @@ const routes =[
 	path: '/signup',
 	handler: (request, reply) =>{
 			reply.file("vendor_pages/signup.html");
+		}
+	},
+	{
+	method: 'GET',
+	path: '/login',
+	handler: (request, reply) =>{
+			reply.file("vendor_pages/login.html");
+		}
+	},
+	{
+	method: 'GET',
+	path: '/otp/{objectid}',
+	handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else{
+					reply.file("vendor_pages/otp.html");
+				}
+			});
 		}
 	},
 	{
@@ -402,72 +427,240 @@ const routes =[
 			notes: 'create a new user',
 		},
 		handler: (request, reply) =>{
-			var user = new UserModel(request.payload);
+			var otp = Math.floor(Math.random()*90000) + 10000;
         
-			user.save(function(err, data){
+        	var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
+			var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
+			var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+			var data1 = {
+			  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
+			  to: request.payload.email,
+			  subject: 'Verify your OTP ',
+			  text: "This is your OTP code " + otp  +". \n Enter it In your OTP section input"
+			};
+
+			mailgun.messages().send(data1, function (error, body) {
+			  if (!error){
+				  	var user = new UserModel({
+						"username": request.payload.username,
+						"email": request.payload.email,
+						"phone_number": request.payload.phone_number,
+						"otp": otp
+					});
+
+					user.save(function(err, data){
+						if (err){
+							reply({
+								statusCode: 503,
+								message: err
+							});
+						} else {
+							reply({
+								statusCode: 201,
+								message: 'User created successfully!',
+								data: data
+							});
+						}
+					});
+
+			  } else {
+			  	console.log(error);
+			  	throw error
+			  }
+			});
+
+			
+		}
+	},
+	{
+		method: 'PUT',
+		path: '/resend/otp/{objectid}',
+		config:{
+			//Include this api in swagger documentation
+			tags: ['api'],
+			description: 'resend otp to user',
+			notes: 'resend otp to user',
+			//we use joi plugin to validate the request
+			validate: {
+				params: {
+					objectid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+			var otp = Math.floor(Math.random()*90000) + 10000;
+        
+        	var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
+			var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
+			var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+			var data1 = {
+			  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
+			  to: request.payload.email,
+			  subject: 'Verify your OTP ',
+			  text: "This is your resended OTP  code " + otp  +". \n Enter it In your OTP section input"
+			};
+
+			mailgun.messages().send(data1, function (error, body) {
+			  if (!error){
+				  	UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {otp: otp}},
+						{ new: true },function (err, data) {
+					  		if (err) {
+			    				reply({
+			    					statusCode: 503,
+			    					message: 'error was handled',
+			    					data: err
+			    				});
+			    			}
+			    			else{
+			    				reply({
+			    					statusCode: 200,
+			    					message: "we have resend otp.",
+			    					data: data
+			    				});
+			    			}	
+					});
+
+			  } else {
+			  	console.log(error);
+			  	throw error
+			  }
+			});
+		}
+	},
+	{
+	method:'POST',
+	path:'/auth',
+	config:{
+	    //include this route in swagger documentation
+	    tags:['api'],
+	    description:"authenticate a user",
+	    notes:"authenticate a user",
+	    validate:{
+	        payload:{
+	            email:Joi.string(),
+	            otp:Joi.string()
+	        }
+	    }
+	},
+	handler: function(request, reply){
+			UserModel.find({'email': request.payload.email}, function(err, data){
+			    if (err){
+			        reply({
+			            'error': err
+			        });
+			    } else if (data.length ==0){
+			        reply({
+			            'data': "user does not exist!"
+			        });
+			    } else {
+			        if (request.payload.otp == data[0]['otp']){
+			            var username =request.payload.username;
+			             reply( {
+			             	statusCode: 201,
+			             	data: data,
+			                status: 'success'
+			            } );
+			        }
+			    }
+			})
+		}
+    },
+    {
+	method: 'GET',
+	path: '/loggedin/home/{objectid}',
+	handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else{
+					reply.file("vendor_pages/home.html");
+				}
+			});
+		}	
+	},
+	{
+		path:'/get/userdetail/{email}',
+        method:'GET',
+        config:{
+            //include this route in swagger documentation
+            tags:['api'],
+            description:"get user detail",
+            notes:"get user detail",
+            validate:{
+                //jobtitile is required field
+                params:{
+                    email:Joi.string().required()
+                }
+            }
+        },
+        handler: (request, reply) =>{
+            UserModel.find({"email":request.params.email}, function(err, data){
+                if(err){
+                    reply({
+                        statusCode:503,
+                        message:"Failed to get data",
+                        data:err
+                    });
+                }
+                else if (data.length === 0 ){
+                    reply({
+                        statusCode:200,
+                        message:"user does not exist",
+                        data:data
+                    });
+                }
+                else {
+                    reply({
+                        statusCode:200,
+                        message:"user detail Successfully Fetched",
+                        data:data
+                    });
+                }
+            });
+        }
+	},
+	{
+		method: 'DELETE',
+		path: '/delete/user/{email}',
+		config:{
+			//include this api in swagger documentation
+			tags: ['api'],
+			description: 'delete a user',
+			notes: 'delete a user',
+			validate:{
+				params:{
+					email: Joi.string()
+				}
+			}
+		},
+		handler: function(request, reply){
+			UserModel.findOneAndRemove({'email': request.params.email}, function(err, data){
 				if (err){
 					reply({
 						statusCode: 503,
 						message: err
-					});
-				} else {
+					})
+				} else if (data === null ){
+                    reply({
+                        statusCode:200,
+                        message:"user does not exist",
+                        data:data
+                    });
+                } 
+				else {
 					reply({
 						statusCode: 201,
-						message: 'User created successfully!',
-						data: data
-					});
+						message: 'User deleted successfully'
+					})
 				}
 			});
 		}
-	},
-	 {
-        method:'POST',
-        path:'/auth',
-        config:{
-            //include this route in swagger documentation
-            tags:['api'],
-            description:"authenticate a user",
-            notes:"authenticate a user",
-            validate:{
-                payload:{
-                    email:Joi.string(),
-                    password:Joi.string()
-                }
-            }
-        },
-        handler: function(request, reply){
-            UserModel.find({'email': request.payload.email}, function(err, data){
-                if (err){
-                    reply({
-                        'error': err
-                    });
-                } else if (data.length ==0){
-                    reply({
-                        'data': "user does not exist!"
-                    });
-                } else {
-                    if (request.payload.password == data[0]['password']){
-                        var username =request.payload.username;
-                        const token = jwt.sign({
-                            email,
-                            userid:data[0]['_id'],
-    
-                        },'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy', {
-                            algorithm: 'HS256',
-                            expiresIn: '1h',
-                        });
-    
-                         reply( {
-                            token,
-                            userid: data[0]['_id'],
-                            data: 'success'
-                        } );
-                    }
-                }
-            })
-
-        }
-    },
+	}
 ]
 
 export default routes;

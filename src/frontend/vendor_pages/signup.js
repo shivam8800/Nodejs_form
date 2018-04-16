@@ -25,6 +25,7 @@ $(document).ready(function(){
                 window.localStorage.setItem('objectid', json['data']['_id']);
                 window.localStorage.setItem('email', $('#email').val());
                 window.location = "http://127.0.0.1:8080/otp/" + json["data"]['_id'] 
+                console.log(json);
             },
             error : function(err){
                 alert(err);

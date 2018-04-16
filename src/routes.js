@@ -584,6 +584,24 @@ const routes =[
 		}	
 	},
 	{
+	method: 'GET',
+	path: '/talent/{objectid}',
+	handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else{
+					reply.file("vendor_pages/talent.html");
+				}
+			});
+		}	
+	},
+	{
 		path:'/get/userdetail/{email}',
         method:'GET',
         config:{

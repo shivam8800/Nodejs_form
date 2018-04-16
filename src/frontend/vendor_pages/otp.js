@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+    $('form').find("input[type=text]").each(function(ev){
+        $(this).attr("placeholder", "We sent an OTP to " + localStorage.getItem('email'));
+    });
+
     var objectid = localStorage.getItem('objectid');
    
        $('#resend_otp').click(function(e){
@@ -23,8 +27,11 @@ $(document).ready(function(){
                 data : {email: localStorage.getItem('email'), otp: $('#OTP').val()},
                 success : function(json){
                     console.log(json['data']['0']['_id']);
+                    console.log(json);
                     if (json['status'] == "success"){
-                        window.location = "http://127.0.0.1:8080/loggedin/home/" + json['data']['0']['_id']                     
+                        window.location = "http://127.0.0.1:8080/talent/" + json['data']['0']['_id']                     
+                    } else {
+                        alert(json);
                     }
                 },
                 error : function(err){

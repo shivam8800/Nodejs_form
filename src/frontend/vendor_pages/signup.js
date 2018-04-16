@@ -1,4 +1,9 @@
 $(document).ready(function(){
+
+    $('#login').click(function(e){
+        window.location = 'http://127.0.0.1:8080/login';
+    });
+
     $("#signup_form").validate();
     
     $('#submit').click(function(e){

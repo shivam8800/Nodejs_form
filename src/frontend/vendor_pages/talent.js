@@ -26,7 +26,8 @@ $(document).ready(function(){
                     type : "PUT",
                     data : {talent_id: talent_id},
                     success : function(json){
-                        console.log(json); 
+                        window.localStorage.setItem('objectid', json['data']['_id']);
+                        window.location = "http://127.0.0.1:8080/info/" + json['data']['_id'];
                     },
                     error : function(err){
                         alert(err);

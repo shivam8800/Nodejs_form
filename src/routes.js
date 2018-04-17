@@ -603,6 +603,24 @@ const routes =[
 		}	
 	},
 	{
+	method: 'GET',
+	path: '/info/{objectid}',
+	handler: (request, reply) =>{
+			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else{
+					reply.file("vendor_pages/info.html");
+				}
+			});
+		}	
+	},
+	{
 		path:'/get/userdetail/{email}',
         method:'GET',
         config:{
@@ -690,7 +708,6 @@ const routes =[
 			notes: 'delete a user',
 		},
 		handler: function(request, reply){
-			console.log(request.payload);
 			var Talent = new TalentModel({
                   "fiction_writer": request.payload.fiction_writer,
 				  "singer": request.payload.singer,

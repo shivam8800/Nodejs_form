@@ -29,6 +29,7 @@ $(document).ready(function(){
                     console.log(json['data']['0']['_id']);
                     console.log(json);
                     if (json['status'] == "success"){
+                        window.localStorage.setItem('email', localStorage.getItem('email'));
                         window.location = "http://127.0.0.1:8080/talent/" + json['data']['0']['_id']                     
                     } else {
                         alert(json);

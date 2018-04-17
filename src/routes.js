@@ -1,6 +1,7 @@
 const db = require('../database').db;
 var FormModel = require('../models/form');
 var UserModel = require('../models/user');
+var TalentModel = require('../models/talent');
 const Joi = require('joi');
 
 import fs from 'fs'
@@ -678,7 +679,117 @@ const routes =[
 				}
 			});
 		}
-	}
+	},
+	{
+		method: 'POST',
+		path: '/post/talents/ofuser',
+		config:{
+			//include this api in swagger documentation
+			tags: ['api'],
+			description: 'delete a user',
+			notes: 'delete a user',
+		},
+		handler: function(request, reply){
+			console.log(request.payload);
+			var Talent = new TalentModel({
+                  "fiction_writer": request.payload.fiction_writer,
+				  "singer": request.payload.singer,
+				  "social_media_influencer": request.payload.social_media_influencer,
+				  "actor": request.payload.actor,
+				  "cinematographer": request.payload.cinematographer,
+				  "non_fiction_writer": request.payload.non_fiction_writer,
+				  "song_writer": request.payload.song_writer,
+				  "voice_actor": request.payload.voice_actor,
+				  "user_id": request.payload.user_id
+           });
+			Talent.save(function(err,data){
+               if (err){
+                   throw err;
+                   console.log(err);
+               } else{
+                   reply({
+                        statusCode: 200,
+                        message: 'talent created Successfully',
+                        data: data
+                    });
+               }
+           });
+		}
+
+	},
+	{
+		method: 'PUT',
+		path: '/updatee/talent_id/usermodle/{objectid}',
+		config:{
+			//Include this api in swagger documentation
+			tags: ['api'],
+			description: 'resend otp to user',
+			notes: 'resend otp to user',
+			//we use joi plugin to validate the request
+			validate: {
+				params: {
+					objectid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+
+			UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {talent_id: request.payload.talent_id}},
+						{ new: true },function (err, data) {
+					  		if (err) {
+			    				reply({
+			    					statusCode: 503,
+			    					message: 'error was handled',
+			    					data: err
+			    				});
+			    			}
+			    			else{
+			    				reply({
+			    					statusCode: 200,
+			    					message: "we have updated the talent_id.",
+			    					data: data
+			    				});
+			    			}	
+					});
+		}
+	},
+	{
+		method: 'DELETE',
+		path: '/delete/talent/{user_id}',
+		config:{
+			//include this api in swagger documentation
+			tags: ['api'],
+			description: 'delete a user',
+			notes: 'delete a user',
+			validate:{
+				params:{
+					user_id: Joi.string()
+				}
+			}
+		},
+		handler: function(request, reply){
+			TalentModel.findOneAndRemove({'user_id': request.params.user_id}, function(err, data){
+				if (err){
+					reply({
+						statusCode: 503,
+						message: err
+					})
+				} else if (data === null ){
+                    reply({
+                        statusCode:200,
+                        message:"user does not exist",
+                        data:data
+                    });
+                } 
+				else {
+					reply({
+						statusCode: 201,
+						message: 'User deleted successfully'
+					})
+				}
+			});
+		}
+	},
 ]
 
 export default routes;

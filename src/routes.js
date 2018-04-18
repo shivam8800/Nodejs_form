@@ -529,6 +529,54 @@ const routes =[
 		}
 	},
 	{
+		method: 'PUT',
+		path: '/update/user/vitalinfo/{objectid}',
+		config:{
+			//Include this api in swagger documentation
+			tags: ['api'],
+			description: 'setting information of vital info',
+			notes: 'setting information of vital info',
+			//we use joi plugin to validate the request
+			validate: {
+				params: {
+					objectid: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) =>{
+			const mainData = JSON.parse(request.payload.formModel);
+			
+			UserModel.findByIdAndUpdate(
+				{"_id":request.params.objectid},
+				{ $set: 
+					{ city: mainData.city[0],
+					  languages: mainData.languages,
+					  fee: mainData.fee}},
+				{ new: true },function (err, data) {
+			  		if (err) {
+	    				reply({
+	    					statusCode: 503,
+	    					message: 'no metch found',
+	    					data: err
+	    				});
+	    			} else if (data === null ){
+	                    reply({
+	                        statusCode:200,
+	                        message:"user does not exist",
+	                        data:data
+	                    });
+	    			}
+	    			else{
+	    				reply({
+	    					statusCode: 200,
+	    					message: "you have successfully updated your details.",
+	    					data: data
+	    				});
+	    			}	
+			});
+		}
+	},
+	{
 	method:'POST',
 	path:'/auth',
 	config:{

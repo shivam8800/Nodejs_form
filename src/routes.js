@@ -545,7 +545,7 @@ const routes =[
 		},
 		handler: (request, reply) =>{
 			const mainData = JSON.parse(request.payload.formModel);
-			
+
 			UserModel.findByIdAndUpdate(
 				{"_id":request.params.objectid},
 				{ $set: 
@@ -855,6 +855,48 @@ const routes =[
 			});
 		}
 	},
+	{
+
+	    method: 'POST',
+	    path: '/user/video/',
+	    config: {
+	    	//Include this api in swagger documentation
+			tags: ['api'],
+			description: 'uploads video file by user',
+			notes: 'uploads video file by user',
+
+	        payload: {
+	            output: 'stream',
+	            parse: true,
+	            allow: 'multipart/form-data'
+	        },
+
+	        handler: function (request, reply) {
+	            var data = request.payload;
+	            if (data.file) {
+	                var name = data.file.hapi.filename;
+	                var path = __dirname + "/video_files/" + name;
+	                var file = fs.createWriteStream(path);
+
+	                file.on('error', function (err) { 
+	                    console.error(err)
+	                });
+
+	                data.file.pipe(file);
+
+	                data.file.on('end', function (err) { 
+	                    var ret = {
+	                        filename: data.file.hapi.filename,
+	                        headers: data.file.hapi.headers
+	                    }
+	                    reply(JSON.stringify(ret));
+	                })
+	            }
+
+
+	        }
+	    }
+	}
 ]
 
 export default routes;

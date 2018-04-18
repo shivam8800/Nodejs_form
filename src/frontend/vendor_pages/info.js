@@ -10,15 +10,13 @@ $(document).ready(function(){
         }
 
         var objectid = localStorage.getItem('objectid');
-        console.log(objectid)
         $.ajax({
             url : "http://127.0.0.1:8080/update/user/vitalinfo/" + objectid,
             type : "PUT",
             data : { formModel: JSON.stringify(formModel)},
             success : function(json){
-                // window.localStorage.setItem('objectid', json['data']['_id']);
-                // window.location = "/record/" + json['data']['_id'];
-                console.log(json);
+                window.localStorage.setItem('objectid', objectid);
+                window.location = "/loggedin/home/" + json['data']['_id'];
             },
             error : function(err){
                 alert(err);

@@ -858,7 +858,7 @@ const routes =[
 	{
 
 	    method: 'POST',
-	    path: '/user/video/',
+	    path: '/user/video/{objectid}',
 	    config: {
 	    	//Include this api in swagger documentation
 			tags: ['api'],
@@ -874,8 +874,10 @@ const routes =[
 	        handler: function (request, reply) {
 	            var data = request.payload;
 	            if (data.file) {
+	                data.file.hapi.filename = request.params.objectid;
+	                console.log(data.file.hapi.filename);
 	                var name = data.file.hapi.filename;
-	                var path = __dirname + "/video_files/" + name;
+	                var path = __dirname + "/video_files/" + name + '.mp4';
 	                var file = fs.createWriteStream(path);
 
 	                file.on('error', function (err) { 

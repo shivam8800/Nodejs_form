@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Talent Form</title>
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/vendor_pages/signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/style.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+
+<style type="text/css">
+
+  /* The container */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    font-size: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #fff;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.checkmark{
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+</style>
+
+</head>
+
+<body style="padding: 0px;">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="border: 2px solid gainsboro;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <a href="http://127.0.0.1:8080/" class="x-brand img" title="Work with writers and marketers to produce amazing social media content" style="outline: none;">
+          <img src="//birchapp.io/wp-content/uploads/2017/11/birch-full-logo-cyan.png" alt="Work with writers and marketers to produce amazing social media content" style="width: 100px;"></a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+        </form>
+      </div>
+    </nav>
+    
+  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh; max-width: 800vh;">
+    <div class="col-md-6">
+        <div class="form-area">
+            <form id="talent_form" role="form">
+            <br style="clear:both">
+                        <h3 style="margin-bottom: 25px; text-align: center;">Tell us about your talents</h3>
+              <div style="display: flex; flex-direction: row; justify-content: space-around;">
+                <div class="flex-container">
+                   <label class="container">Fiction Writer
+                    <input type="checkbox" class="checkbox" name="fiction_writer" id="fiction_writer">
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container">Actor
+                    <input type="checkbox" class="checkbox" name="actor" id="actor">
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container">Song writer
+                    <input type="checkbox" class="checkbox" name="song_writer" id="song_writer">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+
+                <!-- second column -->
+                <div class="flex-container">
+                  <label class="container">Singer
+                    <input type="checkbox" class="checkbox" name="singer" id="singer">
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container">Cinematographer
+                    <input type="checkbox" class="checkbox" name="cinematographer" id="cinematographer">
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container">Voice actor
+                    <input type="checkbox" class="checkbox" name="voice_actor" id="voice_actor">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+
+                <!-- Third column -->
+                <div class="flex-container">
+                  <label class="container">Social Media Influencer
+                    <input type="checkbox" class="checkbox" name="social_media_influencer" id="social_media_influencer">
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container">Non-Fiction writer
+                    <input type="checkbox" class="checkbox" name="non_fiction_writer" id="non_fiction_writer">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;">
+                <div><button type="button" id="submit" name="submit" class="btn w3-button"> Proceed </button></div>
+              
+                <div><p style="font-size: 96%;">You will need to complete profile tasks verify each of your talents</p></div>
+              </div>
+            </form>            
+      </div>
+    </div>
+  </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8080/vendor_pages/talent.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+</body>
+</html>

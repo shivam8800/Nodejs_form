@@ -5,24 +5,41 @@
     <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/vendor_pages/signup.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
     <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/style.css">
 
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
 </head>
 
 <body style="padding: 0px;">
-    
-  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="border: 2px solid gainsboro;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <a href="http://127.0.0.1:8080/" class="x-brand img" title="Work with writers and marketers to produce amazing social media content" style="outline: none;">
+          <img src="//birchapp.io/wp-content/uploads/2017/11/birch-full-logo-cyan.png" alt="Work with writers and marketers to produce amazing social media content" style="width: 100px;"></a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+        </form>
+      </div>
+    </nav>
+
+  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
     <div class="col-md-6">
         <div class="form-area">
             <form id="otp_form" role="form">
             <br style="clear:both">
                         <h3 style="margin-bottom: 25px; text-align: center;">Upload a File</h3>
               <div class="form-group" style="margin-bottom: 5%;">
-                <input type="file" class="form-control" id="file" name="file" required>
+                <input type="file" class="form-control" accept="video/*" id="file" name="file" required>
               </div>
 
-                <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Submit </button>
+                <button type="button" id="submit" name="submit" class="btn w3-button float-right"> Submit </button>
             </form>
         </div>
     </div>

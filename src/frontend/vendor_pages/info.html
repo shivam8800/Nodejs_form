@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Info Form</title>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/style.css">
+        <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/vendor_pages/signup.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+    <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+
+    <!-- for cites code -->
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link href="http://127.0.0.1:8080/magicsuggest.css" rel="stylesheet" type="text/css">
+</head>
+
+<body style="padding: 0px;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="border: 2px solid gainsboro;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <a href="http://127.0.0.1:8080/" class="x-brand img" title="Work with writers and marketers to produce amazing social media content" style="outline: none;">
+          <img src="//birchapp.io/wp-content/uploads/2017/11/birch-full-logo-cyan.png" alt="Work with writers and marketers to produce amazing social media content" style="width: 100px;"></a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+        </form>
+      </div>
+    </nav>
+
+    
+  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
+    <div class="col-md-6">
+        <div class="form-area">
+            <form id="info_form" role="form">
+            <br style="clear:both">
+                        <h3 style="margin-bottom: 25px; text-align: center;">Complete this vital info</h3>
+
+              <div class="form-group" style="margin-bottom: 2%;">
+                <input type="text" class="form-control" id="city" name="city" placeholder="Your city of residence " required>
+              </div>
+              <div class="form-group" style="margin-bottom: 2%;">
+                <input type="text" class="form-control" id="ms1" name="languages" placeholder="Language you know" required>
+              </div>
+              <div class="form-group" style="margin-bottom: 5%;">
+                <input type="number" class="form-control" id="fee" name="fee" placeholder="Your fee in USD($) / hr" required>
+              </div>
+
+                <button type="button" id="submit" name="submit" class="btn w3-button float-right"> Proceed </button>
+            </form>
+        </div>
+    </div>
+  </div> 
+  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:8080/vendor_pages/info.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script src="http://127.0.0.1:8080/magicsuggest.js"></script>
+    <script src="http://127.0.0.1:8080/form-serializer.min.js"></script>
+    <script>
+      $(function() {
+          var ms1 = $('#ms1').magicSuggest({
+            data: ['Abkhaz', 'Afar', 'Afrikaans', 'Akan', 'Albanian', 'Amharic', 'Arabic', 'Aragonese', 'Armenian', 'Assamese', 'Avaric', 'Avestan', 'Aymara', 'Azerbaijani', 'Bambara', 'Bashkir', 'Basque', 'Belarusian', 'Bengali', 'Bihari', 'Bislama', 'Bosnian', 'Breton', 'Bulgarian', 'Burmese', 'Catalan; Valencian', 'Chamorro', 'Chechen', 'Chichewa; Chewa; Nyanja', 'Chinese', 'Chuvash', 'Cornish', 'Corsican', 'Cree', 'Croatian', 'Czech', 'Danish', 'Divehi; Dhivehi; Maldivian;', 'Dutch', 'English', 'Esperanto', 'Estonian', 'Ewe', 'Faroese', 'Fijian', 'Finnish', 'French', 'Fula; Fulah; Pulaar; Pular', 'Galician', 'Georgian', 'German', 'Greek, Modern', 'Guaran\xc3\xad', 'Gujarati', 'Haitian; Haitian Creole', 'Hausa', 'Hebrew (modern)', 'Herero', 'Hindi', 'Hiri Motu', 'Hungarian', 'Interlingua', 'Indonesian', 'Interlingue', 'Irish', 'Igbo', 'Inupiaq', 'Ido', 'Icelandic', 'Italian', 'Inuktitut', 'Japanese', 'Javanese', 'Kalaallisut, Greenlandic', 'Kannada', 'Kanuri', 'Kashmiri', 'Kazakh', 'Khmer', 'Kikuyu, Gikuyu', 'Kinyarwanda', 'Kirghiz, Kyrgyz', 'Komi', 'Kongo', 'Korean', 'Kurdish', 'Kwanyama, Kuanyama', 'Latin', 'Luxembourgish, Letzeburgesch', 'Luganda', 'Limburgish, Limburgan, Limburger', 'Lingala', 'Lao', 'Lithuanian', 'Luba-Katanga', 'Latvian', 'Manx', 'Macedonian', 'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'M\xc4\x81ori', 'Marathi (Mar\xc4\x81\xe1\xb9\xadh\xc4\xab)', 'Marshallese', 'Mongolian', 'Nauru', 'Navajo, Navaho', 'Norwegian Bokm\xc3\xa5l', 'North Ndebele', 'Nepali', 'Ndonga', 'Norwegian Nynorsk', 'Norwegian', 'Nuosu', 'South Ndebele', 'Occitan', 'Ojibwe, Ojibwa', 'Old Church Slavonic, Church Slavic, Church Slavonic, Old Bulgarian, Old Slavonic', 'Oromo', 'Oriya', 'Ossetian, Ossetic', 'Panjabi, Punjabi', 'P\xc4\x81li', 'Persian', 'Polish', 'Pashto, Pushto', 'Portuguese', 'Quechua', 'Romansh', 'Kirundi', 'Romanian, Moldavian, Moldovan', 'Russian', 'Sanskrit (Sa\xe1\xb9\x81sk\xe1\xb9\x9bta)', 'Sardinian', 'Sindhi', 'Northern Sami', 'Samoan', 'Sango', 'Serbian', 'Scottish Gaelic; Gaelic', 'Shona', 'Sinhala, Sinhalese', 'Slovak', 'Slovene', 'Somali', 'Southern Sotho', 'Spanish; Castilian', 'Sundanese', 'Swahili', 'Swati', 'Swedish', 'Tamil', 'Telugu', 'Tajik', 'Thai', 'Tigrinya', 'Tibetan Standard, Tibetan, Central', 'Turkmen', 'Tagalog', 'Tswana', 'Tonga (Tonga Islands)', 'Turkish', 'Tsonga', 'Tatar', 'Twi', 'Tahitian', 'Uighur, Uyghur', 'Ukrainian', 'Urdu', 'Uzbek', 'Venda', 'Vietnamese', 'Volap\xc3\xbck', 'Walloon', 'Welsh', 'Wolof', 'Western Frisian', 'Xhosa', 'Yiddish', 'Yoruba', 'Zhuang, Chuang']
+          });
+        });
+    </script>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36251023-1']);
+      _gaq.push(['_setDomainName', 'jqueryscript.net']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    <script type="text/javascript">
+      $.ajax({
+            url : "http://127.0.0.1:8080/get/allcities",
+            type : "GET",
+            success : function(json){
+              $(function() {
+                var ms1 = $('#city').magicSuggest({
+                  data: json
+                });
+              });
+            },
+            error : function(err){
+                alert(err);
+            }
+        });
+    </script>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36251023-1']);
+      _gaq.push(['_setDomainName', 'jqueryscript.net']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</body>
+</html>

@@ -10,13 +10,19 @@ td { overflow:overlay;white-space:nowrap;  }
 	margin: 10px 0px 60px;
 	border: 1px solid GREY;
 	}
-
+img {
+    border-style: none;
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border: 0;
+}
 #signup:hover{
   cursor: pointer;
 }
 
 body {
-  font-family: Courier, 'Courier New', monospace;
+  font-family: Arial, Helvetica, sans-serif;;
   padding: 1em 2em;
   font-size: 1rem;
 }

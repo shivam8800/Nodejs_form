@@ -23,3 +23,25 @@
 #resend_otp:hover{
      text-decoration-line: underline; 
 }
+
+#login{
+  color: blue;
+  cursor: pointer;
+}
+
+#login{
+  text-decoration-line: underline; 
+}
+
+img {
+    border-style: none;
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border: 0;
+}
+#submit{
+    background: #FAFAFA;
+    color: black;
+    border: 1px solid black;
+}

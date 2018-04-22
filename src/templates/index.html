@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> {{title}} </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+  <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+</head>
+
+<body style="padding: 0px;">
+
+  {{> navbar-client }}
+  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
+    <div class="col-md-6">
+      <div class="form-area">
+        <form id="order_form" role="form">
+          <br style="clear:both">
+          <h3 style="margin-bottom: 25px; text-align: center;">Detail Form</h3>
+          <div class="form-group">
+            <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Write your project name" required>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 8%;">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+          </div>
+          <div class="form-group line">
+            <!-- country codes (ISO 3166) and Dial codes. -->
+            <select name="countryCode" style="width: 30%; margin-right: 1%;" class="form-control" id="countryCode">
+
+            </select>
+            <input type="number" style="width: 70%;" class="form-control" id="phonnumber" name="phone_number" placeholder="Contact number"
+              required>
+          </div>
+
+          <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Next </button>
+        </form>
+        <button id="orders" class="btn btn-primary float-left">All Orders</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal -->
+  <div id="showModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" style="width: 60%;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalLabel">Particular User email</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="myform">
+          <label for="field" class="col-form-label">User Email </label>
+          <input class="left form-control" id="email_id" name="email_id">
+          <br/>
+          <hr>
+          <input type="submit" value="Go" class="float-right btn btn-primary" style="background-color: #007bff !important;" id="showorders">
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://127.0.0.1:8080/app.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+</body>
+
+</html>

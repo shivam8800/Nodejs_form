@@ -70,9 +70,18 @@ server.register(require('inert'), (err) => {
 	        	else {
 	        		 return request.params.filename;	            
 	        }
-	    }
+		}
 	}
 	});
+		server.views({
+			engines: {
+				html: require('handlebars')
+			},
+			relativeTo: __dirname,
+			path: 'templates',
+			partialsPath:"partials"
+		});
+		
 });
 
 server.start(err=>{

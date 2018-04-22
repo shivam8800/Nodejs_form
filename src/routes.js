@@ -19,7 +19,7 @@ const routes =[
 	method: 'GET',
 	path: '/',
 	handler: (request, reply) =>{
-			reply.file("index.html");
+			reply.view("index",{title: 'Sign up for Birch' });
 		}
 	},
 	{
@@ -79,7 +79,7 @@ const routes =[
     				});
     			}
     			else{
-    				reply.file("./index1.html");
+    				reply.view("index1");
     			}
     		});
 		}
@@ -97,7 +97,7 @@ const routes =[
     				});
     			}
     			else{
-    				reply.file("./record.html");
+    				reply.view("record");
     			}
     		});
 		}
@@ -115,7 +115,7 @@ const routes =[
     				});
     			}
     			else{
-    				reply.file("./show.html");
+    				reply.view("show");
 					// var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
 					// var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
 					// var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});

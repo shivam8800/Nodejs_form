@@ -13,7 +13,28 @@
 
 <body style="padding: 0px;">
     
-  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="border: 2px solid gainsboro;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <a href="http://127.0.0.1:8080/" class="x-brand img" title="Work with writers and marketers to produce amazing social media content" style="outline: none;">
+          <img src="//birchapp.io/wp-content/uploads/2017/11/birch-full-logo-cyan.png" alt="Work with writers and marketers to produce amazing social media content" style="width: 100px;"></a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <div class="nav-item">
+            <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link disabled" href="#">Refer a creative</a>
+          </div>
+        </form>
+      </div>
+    </nav>
+
+  <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
     <div class="col-md-6">
         <div class="form-area">
             <form id="order_form1" role="form">
@@ -24,8 +45,8 @@
                 <input type="email" class="form-control" id="email" name="email" placeholder="Type your email id" required>
               </div>
 
-                <a href="http://127.0.0.1:8080/signup"><button type="button" id="signup" name="signup" class="btn w3-button float-left" style="border: 1px solid black;"> Sign up </button></a>
-                <button type="button" id="submit" name="submit" class="btn w3-button float-right"> Log In </button>
+                <a href="http://127.0.0.1:8080/signup"><button type="button" id="signup" name="signup" class="btn btn-primary float-left"> Sign up </button></a>
+                <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Log In </button>
             </form>
         </div>
     </div>

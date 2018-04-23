@@ -502,6 +502,7 @@ const routes =[
 			};
 
 			mailgun.messages().send(data1, function (error, body) {
+				console.log(data1);
 			  if (!error){
 				  	UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {otp: otp}},
 						{ new: true },function (err, data) {

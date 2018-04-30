@@ -515,6 +515,7 @@ const routes = [
 			};
 
 			mailgun.messages().send(data1, function (error, body) {
+<<<<<<< HEAD
 				if (!error) {
 					UserModel.findByIdAndUpdate({ "_id": request.params.objectid }, { $set: { otp: otp } },
 						{ new: true }, function (err, data) {
@@ -533,6 +534,27 @@ const routes = [
 								});
 							}
 						});
+=======
+				console.log(data1);
+			  if (!error){
+				  	UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {otp: otp}},
+						{ new: true },function (err, data) {
+					  		if (err) {
+			    				reply({
+			    					statusCode: 503,
+			    					message: 'error was handled',
+			    					data: err
+			    				});
+			    			}
+			    			else{
+			    				reply({
+			    					statusCode: 200,
+			    					message: "we have resend otp.",
+			    					data: data
+			    				});
+			    			}	
+					});
+>>>>>>> 4285e5af2dd6b138231fc936dd9cea21b4a8c7af
 
 				} else {
 					console.log(error);

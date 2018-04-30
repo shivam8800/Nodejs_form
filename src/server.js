@@ -1,95 +1,118 @@
 import Hapi from 'hapi';
 import routes from './routes'
-import Inert from 'inert';
-import Vision from 'vision';
+
 var Path = require('path');
-// import jwt from 'jsonwebtoken';
+// var HapiSwagger = require('hapi-swagger')
+import jwt from 'jsonwebtoken';
 
-const server = new Hapi.Server({
-    connections: {
-        routes: {
-            files: {
-                relativeTo: Path.join(__dirname, 'frontend')
-            }
-        }
-    }
+const PORT = process.env.PORT;
+
+global.PRIVATE_KEY = 'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy';
+
+const server = Hapi.server({
+	host: 'localhost',
+	port: 8080 || PORT,
+	routes: {
+		files: {
+			relativeTo: Path.join(__dirname, 'frontend')
+		}
+	}
 });
 
 
-const PORT =  process.env.PORT;
 
-server.connection({
-	port: PORT || 8080,
-	routes: { cors: true }
-});
 
-server.route(routes);
+// server.connection({
+// 	port: PORT || 8080,
+// 	routes: { cors: true }
+// });
 
-server.register([
-	Inert,
-	Vision,
-	{
-		register: require('hapi-swagger')
-	}],
-	function(err) {
-		if (err){
-			server.log(['error'], 'hapi-swagger load error:' + err )
-		} else {
-			server.log(['start'], 'hapi-swagger interface loaded')
+const init_server = async () => {
+
+
+
+	console.log("Running registeries for plugins");
+	await server.register(require('inert'));
+	await server.register(require('vision'));
+	await server.register(require('hapi-auth-bearer-token'));
+	// await server.register({plugin:HapiSwagger});
+	console.log("Finished running registeries for plugins");
+
+	server.views({
+		engines: {
+			html: require('handlebars')
+		},
+		relativeTo: __dirname,
+		path: 'templates',
+		partialsPath: "partials"
+	});
+
+	server.state('signature', {
+		ttl: null,
+		isSecure: true,
+		isHttpOnly: true,
+		encoding: 'base64json',
+		clearInvalid: false, // remove invalid cookies
+		strictHeader: true // don't allow violations of RFC 6265
+	});
+
+	server.route(routes);
+
+	server.route({
+		method: 'GET',
+		path: '/{param*}',
+		handler: {
+			directory: {
+				path: '.',
+				index: false
+			}
 		}
 	});
+
+
+
+
+	server.auth.strategy('simple', 'bearer-access-token', {
+
+		allowCookieToken: true,
+		validate: async (request, token, h) => {
+
+			// here is where you validate your token
+			// comparing with token from your database for example
+
+			// verify a token symmetric
+			jwt.verify(token, global.PRIVATE_KEY, function (err, decoded) {
+				if(err){
+					const isValid=false
+					const credentials = null;
+				}
+					
+				else{
+					const isValid=true
+					const credentials = decoded;
+				}
+					
+			});
+	
+			// const artifacts = { test: 'info' };
+
+			return { isValid, credentials };
+		}
+
+	});
+
+
+
+
+	await server.start();
+
+	console.log('Server started at', server.info.uri);
+
+}
 
 server.log('info', 'View configuration completed')
 
-// server.register( require( 'hapi-auth-jwt' ), ( err ) => {
-//     server.auth.strategy( 'token', 'jwt', {
 
-//         key: 'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy',
 
-//         verifyOptions: {
-//             algorithms: [ 'HS256' ],
-//         }
-
-//     } );
-// } );
-
-server.register(require('inert'), (err) => {
-
-    if (err) {
-        throw err;
-    }
-
-    server.route({
-	    method: 'GET',
-	    path: '/{filename}',
-	    handler: {
-	        file: function (request) {
-	        	if (request.params.filename.split('.').pop() == 'html') {
-	        	 	return null 
-	        	}
-	        	else {
-	        		 return request.params.filename;	            
-	        }
-		}
-	}
-	});
-		server.views({
-			engines: {
-				html: require('handlebars')
-			},
-			relativeTo: __dirname,
-			path: 'templates',
-			partialsPath:"partials"
-		});
-		
-});
-
-server.start(err=>{
-	if (err){
-		console.log("Error was handed!");
-		console.log(err);
-	}
-
-	console.log('Server started at', server.info.uri);
-});
+init_server();
 

@@ -2,11 +2,14 @@ const db = require('../database').db;
 var FormModel = require('../models/form');
 var UserModel = require('../models/user');
 var TalentModel = require('../models/talent');
+var Mailer = require('./mailer');
 const Joi = require('joi');
+var async = require("async");
+import jwt from 'jsonwebtoken';
 
 import fs from 'fs'
 var path = require('path');
-var ObjectId = require('mongodb').ObjectID;
+var ObjectId = require('mongoose').ObjectID;
 
 const rp = require('request-promise');
 const cheerio = require('cheerio');
@@ -14,33 +17,46 @@ const cheerio = require('cheerio');
 var request1 = require('request');
 // import jwt from 'jsonwebtoken';
 
-const routes =[
+const routes = [
 	{
-	method: 'GET',
-	path: '/',
-	handler: (request, reply) =>{
-			reply.view("index",{title: 'Sign up for Birch' });
+		method: 'GET',
+		path: '/',
+		handler: (request, h) => {
+			return h.view("index", { title: 'Get an invite' });
 		}
 	},
 	{
-	method: 'GET',
-	path: '/signup',
-	handler: (request, reply) =>{
-			reply.file("vendor_pages/signup.html");
+		method: 'GET',
+		path: '/signup',
+		handler: (request, h) => {
+			return h.view("vendor-signup");
 		}
 	},
+
 	{
-	method: 'GET',
-	path: '/login',
-	handler: (request, reply) =>{
-			reply.file("vendor_pages/login.html");
+		method: 'GET',
+		path: '/otp/{objectid}',
+		handler: (request, reply) => {
+			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no match found',
+						data: err
+					});
+				}
+				else {
+					reply.file("vendor_pages/otp.html");
+				}
+			});
 		}
 	},
+
 	{
-	method: 'GET',
-	path: '/otp/{objectid}',
-	handler: (request, reply) =>{
-			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+		method: 'GET',
+		path: '/additionalDetail/{objectid}',
+		handler: (request, reply) => {
+			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
 				if (err) {
 					reply({
 						statusCode: 503,
@@ -48,74 +64,44 @@ const routes =[
 						data: err
 					});
 				}
-				else{
-					reply.file("vendor_pages/otp.html");
+				else {
+					reply.view("index1");
 				}
 			});
 		}
 	},
 	{
-	method: 'GET',
-	path: '/vendor_pages/{filename}',
-	handler: (request, reply) =>{
-			if (request.params.filename.split('.').pop() == 'html') {
-	        	 	return null 
-	        	}
-	        	else {
-	        		 reply.file('./vendor_pages/' + request.params.filename);	            
-	        }
-		}
-	},
-	{
-		method: 'GET',
-		path: '/additionalDetail/{objectid}',
-		handler: (request, reply) =>{
-			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
-    			if (err) {
-    				reply({
-    					statusCode: 503,
-    					message: 'no metch found',
-    					data: err
-    				});
-    			}
-    			else{
-    				reply.view("index1");
-    			}
-    		});
-		}
-	},
-	{
 		method: 'GET',
 		path: '/record/{objectid}',
-		handler: (request, reply) =>{
-			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
-    			if (err) {
-    				reply({
-    					statusCode: 503,
-    					message: 'no metch found',
-    					data: err
-    				});
-    			}
-    			else{
-    				reply.view("record");
-    			}
-    		});
+		handler: (request, reply) => {
+			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else {
+					reply.view("record");
+				}
+			});
 		}
 	},
 	{
 		method: 'GET',
 		path: '/show/{objectid}',
-		handler: (request, reply) =>{
-			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
-    			if (err) {
-    				reply({
-    					statusCode: 503,
-    					message: 'no metch found',
-    					data: err
-    				});
-    			}
-    			else{
-    				reply.view("show");
+		handler: (request, reply) => {
+			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else {
+					reply.view("show");
 					// var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
 					// var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
 					// var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
@@ -135,37 +121,37 @@ const routes =[
 					//   	console.log(error);
 					//   }
 					// });
-    			}
-    		});
+				}
+			});
 		}
 	},
 	{
 		method: 'GET',
 		path: '/show/orders/{emailid}',
-		config:{
+		config: {
 			//we use joi plugin to validate the request
-			validate:{
-				params:{
+			validate: {
+				params: {
 					emailid: Joi.string().required()
 				}
 			}
 		},
-		handler: (request, reply) =>{
+		handler: (request, reply) => {
 			var order = {
 				"email": request.params.emailid
 			}
 
-			FormModel.find(order, function(err, orders){
+			FormModel.find(order, function (err, orders) {
 				if (err) {
-    				reply({
-    					statusCode: 503,
-    					message: 'no metch found',
-    					data: err
-    				});
-    			}
-    			else{
-    				reply.file('./allorders.html')
-    			}
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else {
+					reply.file('./allorders.html')
+				}
 			});
 		}
 	},
@@ -178,10 +164,10 @@ const routes =[
 			description: 'Get all orders',
 			notes: 'Get all orders'
 		},
-		handler: (request, reply) =>{
-			
-			FormModel.find({}, function(error, data){
-				if (error){
+		handler: (request, reply) => {
+
+			FormModel.find({}, function (error, data) {
+				if (error) {
 					reply({
 						statusCode: 503,
 						message: 'Failed to get data',
@@ -206,11 +192,11 @@ const routes =[
 			description: 'submit a new form',
 			notes: 'submit a new form'
 		},
-		handler: (request, reply) =>{
+		handler: (request, reply) => {
 			var form = new FormModel(request.payload);
-			
-			form.save(function(err, data){
-				if (err){
+
+			form.save(function (err, data) {
+				if (err) {
 					// console.log(err)
 					reply({
 						statusCode: 503,
@@ -229,7 +215,7 @@ const routes =[
 	{
 		method: 'PUT',
 		path: '/update/order/{objectid}',
-		config:{
+		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
 			description: 'update existing order',
@@ -241,76 +227,80 @@ const routes =[
 				}
 			}
 		},
-		handler: (request, reply) =>{
+		handler: (request, reply) => {
 			const mainData = JSON.parse(request.payload.formModel);
 
 			FormModel.findByIdAndUpdate(
-				{"_id":request.params.objectid},
-				{ $set: 
-					{ total_budget: mainData.total_budget,
-					  video_length: mainData.video_length,
-					  total_videos: mainData.total_videos,
-					  shoot_cities: mainData.shoot_cities,
-					  interviewed_people: mainData.interviewed_people}},
-				{ new: true },function (err, data) {
-			  		if (err) {
-	    				reply({
-	    					statusCode: 503,
-	    					message: 'no metch found',
-	    					data: err
-	    				});
-	    			}
-	    			else{
-	    				reply({
-	    					statusCode: 200,
-	    					message: "you have successfully updated your details.",
-	    					data: data
-	    				});
-	    			}	
-			});
+				{ "_id": request.params.objectid },
+				{
+					$set:
+						{
+							total_budget: mainData.total_budget,
+							video_length: mainData.video_length,
+							total_videos: mainData.total_videos,
+							shoot_cities: mainData.shoot_cities,
+							interviewed_people: mainData.interviewed_people
+						}
+				},
+				{ new: true }, function (err, data) {
+					if (err) {
+						reply({
+							statusCode: 503,
+							message: 'no metch found',
+							data: err
+						});
+					}
+					else {
+						reply({
+							statusCode: 200,
+							message: "you have successfully updated your details.",
+							data: data
+						});
+					}
+				});
 		}
 	},
 	{
 
-	    method: 'POST',
-	    path: '/audio',
-	    config: {
-	    	//Include this api in swagger documentation
+		method: 'POST',
+		path: '/audio',
+		config: {
+			//Include this api in swagger documentation
 			tags: ['api'],
 			description: 'upload audio file',
 			notes: 'upload audio file',
 
-	        payload: {
-	            output: 'stream',
-	            parse: true,
-	            allow: 'multipart/form-data'
-	        },
+			payload: {
+				output: 'stream',
+				parse: true,
+				allow: 'multipart/form-data'
+			},
 
-	        handler: function (request, reply) {
-	            var data = request.payload;
-	            if (data.file) {
-	                var name = data.file.hapi.filename;
-	                var path = __dirname + "/uploads/" + name;
-	                var file = fs.createWriteStream(path);
+			handler: function (request, reply) {
+				var data = request.payload;
+				if (data.file) {
+					var name = data.file.hapi.filename;
+					var path = __dirname + "/uploads/" + name;
+					var file = fs.createWriteStream(path);
 
-	                file.on('error', function (err) { 
-	                    console.error(err)
-	                });
+					file.on('error', function (err) {
+						console.error(err)
+					});
 
-	                data.file.pipe(file);
+					data.file.pipe(file);
 
-	                data.file.on('end', function (err) { 
-	                    var ret = {
-	                        filename: data.file.hapi.filename,
-	                        headers: data.file.hapi.headers
-	                    }
-	                    reply(JSON.stringify(ret));
-	                })
-	            }
+					data.file.on('end', function (err) {
+						var ret = {
+							filename: data.file.hapi.filename,
+							headers: data.file.hapi.headers
+						}
+						reply(JSON.stringify(ret));
+					})
+				}
 
 
-	        }
-	    }
+			}
+		}
 	},
 	{
 		method: 'GET',
@@ -327,23 +317,23 @@ const routes =[
 				}
 			}
 		},
-		handler: (request, reply) =>{
-			FormModel.find({"_id":request.params.objectid}, function(err, data){
-    			if (err) {
-    				reply({
-    					statusCode: 503,
-    					message: 'no metch found',
-    					data: err
-    				});
-    			}
-    			else{
-    				reply({
-    					statusCode: 200,
-    					message: "your complaint has been found results are here.",
-    					data: data
-    				});
-    			}
-    		});
+		handler: (request, reply) => {
+			FormModel.find({ "_id": request.params.objectid }, function (err, data) {
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else {
+					reply({
+						statusCode: 200,
+						message: "your complaint has been found results are here.",
+						data: data
+					});
+				}
+			});
 		}
 	},
 	{
@@ -357,126 +347,149 @@ const routes =[
 				}
 			}
 		},
-		handler: (request, reply) =>{
+		handler: (request, reply) => {
 			var file = path.join(__dirname + "/uploads/", request.params.objectid + ".mp3");
 
-			fs.readFile(file , function (err,data){
-                return reply(data)
-                .header('Content-disposition', 'attachment; filename=' + request.params.objectid + ".mp3")
-            });
+			fs.readFile(file, function (err, data) {
+				return reply(data)
+					.header('Content-disposition', 'attachment; filename=' + request.params.objectid + ".mp3")
+			});
 		}
 	},
 	{
 		method: 'GET',
 		path: '/get/orders/{emailid}',
-		config:{
+		config: {
 			//include this api in swagger documetion
 			tags: ['api'],
 			description: 'get all orders of a user',
 			notes: 'get all orders of a user',
 			//we use joi plugin to validate the request
-			validate:{
-				params:{
+			validate: {
+				params: {
 					emailid: Joi.string().required()
 				}
 			}
 		},
-		handler: (request, reply) =>{
+		handler: (request, reply) => {
 			var order = {
 				"email": request.params.emailid
 			}
 
-			FormModel.find(order, function(err, orders){
+			FormModel.find(order, function (err, orders) {
 				if (err) {
-    				reply({
-    					statusCode: 503,
-    					message: 'no metch found',
-    					data: err
-    				});
-    			}
-    			else{
-    				reply({
-    					statusCode: 200,
-    					message: "your complaint has been found results are here.",
-    					data: orders
-    				});
-    			}
+					reply({
+						statusCode: 503,
+						message: 'no metch found',
+						data: err
+					});
+				}
+				else {
+					reply({
+						statusCode: 200,
+						message: "your complaint has been found results are here.",
+						data: orders
+					});
+				}
 			});
-				
+
 		}
 	},
 	{
 		method: 'GET',
 		path: '/get/allcities',
-		config:{
+		config: {
 			tags: ['api'],
 			description: 'get list of all cities of whole world',
 			notes: 'get list of all cities of whole world'
 		},
-		handler: (request, reply) =>{
-			var file = path.join(__dirname + '/cities.txt' );
+		handler: (request, reply) => {
+			var file = path.join(__dirname + '/cities.txt');
 			var array = fs.readFileSync(file).toString().split("\n");
 			reply(array);
 		}
 	},
 	{
-		method:'POST',
-		path: '/create/newuser',
-		config:{
+		method: 'POST',
+		path: '/api/vendor/signup',
+		config: {
 			tags: ['api'],
 			description: 'create a new user',
 			notes: 'create a new user',
 		},
-		handler: (request, reply) =>{
-			var otp = Math.floor(Math.random()*90000) + 10000;
-        
-        	var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
-			var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
-			var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
-			var data1 = {
-			  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
-			  to: request.payload.email,
-			  subject: 'Verify your OTP ',
-			  text: "This is your OTP code " + otp  +". \n Enter it In your OTP section input"
-			};
+		handler: (request, reply) => {
+			var otp = Math.floor(Math.random() * 90000) + 10000;
 
-			mailgun.messages().send(data1, function (error, body) {
-			  if (!error){
-				  	var user = new UserModel({
-						"username": request.payload.username,
-						"email": request.payload.email,
-						"phone_number": request.payload.phone_number,
-						"otp": otp
-					});
-
-					user.save(function(err, data){
-						if (err){
-							reply({
-								statusCode: 503,
-								message: err
-							});
-						} else {
-							reply({
-								statusCode: 201,
-								message: 'User created successfully!',
-								data: data
-							});
-						}
-					});
-
-			  } else {
-			  	console.log(error);
-			  	throw error
-			  }
+			var user = new UserModel({
+				"name": request.payload.name,
+				"email": request.payload.email,
+				"phone_number": request.payload.phone_number,
+				"country_code": request.payload.country_code,
+				"otp": otp
 			});
 
-			
+			user.save(function (err, data) {
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: err
+					});
+				} else {
+
+					Mailer.send_vendor_signup_email(request.payload.email, { otp: otp });
+
+					reply({
+						statusCode: 201,
+						message: data
+					});
+				}
+			});
+
+
 		}
+	},
+	{
+		method: 'GET',
+		path: "/api/vendor/generateotp/{email}",
+		config: {
+			validate: {
+				params: {
+					email: Joi.string().email().required()
+				}
+			}
+		},
+		handler: async (request, h) => {
+
+			let otp = Math.floor(Math.random() * 90000) + 10000;
+
+			let user = await UserModel.findOneAndUpdate({ email: request.params.email }, { $set: { otp: otp } })
+			let mail_status;
+
+			console.log(user)
+
+			if (user) {
+				mail_status = await Mailer.send_vendor_otp(request.params.email, { otp: otp })
+			}
+			else {
+				return h.response({
+					statusCode: 503,
+					message: "No such user found"
+				});
+			}
+
+			return h.response({
+				statusCode: 201,
+				message: mail_status
+			});
+
+
+		}
+
 	},
 	{
 		method: 'PUT',
 		path: '/resend/otp/{objectid}',
-		config:{
+		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
 			description: 'resend otp to user',
@@ -488,50 +501,50 @@ const routes =[
 				}
 			}
 		},
-		handler: (request, reply) =>{
-			var otp = Math.floor(Math.random()*90000) + 10000;
-        
-        	var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
+		handler: (request, reply) => {
+			var otp = Math.floor(Math.random() * 90000) + 10000;
+
+			var api_key = 'key-a790c7dcd4a8d6b103d658321ee4b01e';
 			var domain = 'sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org';
-			var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+			var mailgun = require('mailgun-js')({ apiKey: api_key, domain: domain });
 			var data1 = {
-			  from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
-			  to: request.payload.email,
-			  subject: 'Verify your OTP ',
-			  text: "This is your resended OTP  code " + otp  +". \n Enter it In your OTP section input"
+				from: 'From Birch.io <postmaster@sandboxf461dbe17cad423c9e36c3ac14755efe.mailgun.org>',
+				to: request.payload.email,
+				subject: 'Verify your OTP ',
+				text: "This is your resended OTP  code " + otp + ". \n Enter it In your OTP section input"
 			};
 
 			mailgun.messages().send(data1, function (error, body) {
-			  if (!error){
-				  	UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {otp: otp}},
-						{ new: true },function (err, data) {
-					  		if (err) {
-			    				reply({
-			    					statusCode: 503,
-			    					message: 'error was handled',
-			    					data: err
-			    				});
-			    			}
-			    			else{
-			    				reply({
-			    					statusCode: 200,
-			    					message: "we have resend otp.",
-			    					data: data
-			    				});
-			    			}	
-					});
+				if (!error) {
+					UserModel.findByIdAndUpdate({ "_id": request.params.objectid }, { $set: { otp: otp } },
+						{ new: true }, function (err, data) {
+							if (err) {
+								reply({
+									statusCode: 503,
+									message: 'error was handled',
+									data: err
+								});
+							}
+							else {
+								reply({
+									statusCode: 200,
+									message: "we have resend otp.",
+									data: data
+								});
+							}
+						});
 
-			  } else {
-			  	console.log(error);
-			  	throw error
-			  }
+				} else {
+					console.log(error);
+					throw error
+				}
 			});
 		}
 	},
 	{
 		method: 'PUT',
 		path: '/update/user/vitalinfo/{objectid}',
-		config:{
+		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
 			description: 'setting information of vital info',
@@ -543,82 +556,89 @@ const routes =[
 				}
 			}
 		},
-		handler: (request, reply) =>{
+		handler: (request, reply) => {
 			const mainData = JSON.parse(request.payload.formModel);
 
 			UserModel.findByIdAndUpdate(
-				{"_id":request.params.objectid},
-				{ $set: 
-					{ city: mainData.city[0],
-					  languages: mainData.languages,
-					  fee: mainData.fee}},
-				{ new: true },function (err, data) {
-			  		if (err) {
-	    				reply({
-	    					statusCode: 503,
-	    					message: 'no metch found',
-	    					data: err
-	    				});
-	    			} else if (data === null ){
-	                    reply({
-	                        statusCode:200,
-	                        message:"user does not exist",
-	                        data:data
-	                    });
-	    			}
-	    			else{
-	    				reply({
-	    					statusCode: 200,
-	    					message: "you have successfully updated your details.",
-	    					data: data
-	    				});
-	    			}	
-			});
+				{ "_id": request.params.objectid },
+				{
+					$set:
+						{
+							city: mainData.city[0],
+							languages: mainData.languages,
+							fee: mainData.fee
+						}
+				},
+				{ new: true }, function (err, data) {
+					if (err) {
+						reply({
+							statusCode: 503,
+							message: 'no metch found',
+							data: err
+						});
+					} else if (data === null) {
+						reply({
+							statusCode: 200,
+							message: "user does not exist",
+							data: data
+						});
+					}
+					else {
+						reply({
+							statusCode: 200,
+							message: "you have successfully updated your details.",
+							data: data
+						});
+					}
+				});
 		}
 	},
 	{
-	method:'POST',
-	path:'/auth',
-	config:{
-	    //include this route in swagger documentation
-	    tags:['api'],
-	    description:"authenticate a user",
-	    notes:"authenticate a user",
-	    validate:{
-	        payload:{
-	            email:Joi.string(),
-	            otp:Joi.string()
-	        }
-	    }
-	},
-	handler: function(request, reply){
-			UserModel.find({'email': request.payload.email}, function(err, data){
-			    if (err){
-			        reply({
-			            'error': err
-			        });
-			    } else if (data.length ==0){
-			        reply({
-			            'data': "user does not exist!"
-			        });
-			    } else {
-			        if (request.payload.otp == data[0]['otp']){
-			            var username =request.payload.username;
-			             reply( {
-			             	statusCode: 201,
-			             	data: data,
-			                status: 'success'
-			            } );
-			        }
-			    }
-			})
+		method: 'POST',
+		path: '/api/vendor/auth',
+		config: {
+			//include this route in swagger documentation
+			tags: ['api'],
+			description: "authenticate a vendor",
+			notes: "authenticate a vendor",
+			validate: {
+				payload: {
+					email: Joi.string().email(),
+					otp: Joi.number()
+				}
+			}
+		},
+		handler: async (request, h) => {
+
+
+			let user = await UserModel.findOne({ email: request.payload.email, otp: request.payload.otp })
+
+			if (!user) {
+				return h.response({
+					statusCode: 503,
+					message: user
+				});
+			} else {
+
+				let response_payload = user.toJSON()
+				delete response_payload.otp
+				let token = jwt.sign(response_payload, global.PRIVATE_KEY);
+
+				return h.response({
+					statusCode: 201,
+					message: response_payload
+				}).state('signature', token || "")
+
+			}
+
+
 		}
-    },
-    {
-	method: 'GET',
-	path: '/loggedin/home/{objectid}',
-	handler: (request, reply) =>{
-			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+	},
+	{
+		method: 'GET',
+		path: '/loggedin/home/{objectid}',
+		handler: (request, reply) => {
+			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
 				if (err) {
 					reply({
 						statusCode: 503,
@@ -626,17 +646,17 @@ const routes =[
 						data: err
 					});
 				}
-				else{
+				else {
 					reply.file("vendor_pages/home.html");
 				}
 			});
-		}	
+		}
 	},
 	{
-	method: 'GET',
-	path: '/talent/{objectid}',
-	handler: (request, reply) =>{
-			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+		method: 'GET',
+		path: '/talent/{objectid}',
+		handler: (request, reply) => {
+			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
 				if (err) {
 					reply({
 						statusCode: 503,
@@ -644,17 +664,17 @@ const routes =[
 						data: err
 					});
 				}
-				else{
+				else {
 					reply.file("vendor_pages/talent.html");
 				}
 			});
-		}	
+		}
 	},
 	{
-	method: 'GET',
-	path: '/info/{objectid}',
-	handler: (request, reply) =>{
-			FormModel.findOne({'_id': ObjectId(request.params.objectid) }, function(err, data){
+		method: 'GET',
+		path: '/info/{objectid}',
+		handler: (request, reply) => {
+			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
 				if (err) {
 					reply({
 						statusCode: 503,
@@ -662,81 +682,81 @@ const routes =[
 						data: err
 					});
 				}
-				else{
+				else {
 					reply.file("vendor_pages/info.html");
 				}
 			});
-		}	
+		}
 	},
 	{
-		path:'/get/userdetail/{email}',
-        method:'GET',
-        config:{
-            //include this route in swagger documentation
-            tags:['api'],
-            description:"get user detail",
-            notes:"get user detail",
-            validate:{
-                //jobtitile is required field
-                params:{
-                    email:Joi.string().required()
-                }
-            }
-        },
-        handler: (request, reply) =>{
-            UserModel.find({"email":request.params.email}, function(err, data){
-                if(err){
-                    reply({
-                        statusCode:503,
-                        message:"Failed to get data",
-                        data:err
-                    });
-                }
-                else if (data.length === 0 ){
-                    reply({
-                        statusCode:200,
-                        message:"user does not exist",
-                        data:data
-                    });
-                }
-                else {
-                    reply({
-                        statusCode:200,
-                        message:"user detail Successfully Fetched",
-                        data:data
-                    });
-                }
-            });
-        }
+		path: '/get/userdetail/{email}',
+		method: 'GET',
+		config: {
+			//include this route in swagger documentation
+			tags: ['api'],
+			description: "get user detail",
+			notes: "get user detail",
+			validate: {
+				//jobtitile is required field
+				params: {
+					email: Joi.string().required()
+				}
+			}
+		},
+		handler: (request, reply) => {
+			UserModel.find({ "email": request.params.email }, function (err, data) {
+				if (err) {
+					reply({
+						statusCode: 503,
+						message: "Failed to get data",
+						data: err
+					});
+				}
+				else if (data.length === 0) {
+					reply({
+						statusCode: 200,
+						message: "user does not exist",
+						data: data
+					});
+				}
+				else {
+					reply({
+						statusCode: 200,
+						message: "user detail Successfully Fetched",
+						data: data
+					});
+				}
+			});
+		}
 	},
 	{
 		method: 'DELETE',
 		path: '/delete/user/{email}',
-		config:{
+		config: {
 			//include this api in swagger documentation
 			tags: ['api'],
 			description: 'delete a user',
 			notes: 'delete a user',
-			validate:{
-				params:{
+			validate: {
+				params: {
 					email: Joi.string()
 				}
 			}
 		},
-		handler: function(request, reply){
-			UserModel.findOneAndRemove({'email': request.params.email}, function(err, data){
-				if (err){
+		handler: function (request, reply) {
+			UserModel.findOneAndRemove({ 'email': request.params.email }, function (err, data) {
+				if (err) {
 					reply({
 						statusCode: 503,
 						message: err
 					})
-				} else if (data === null ){
-                    reply({
-                        statusCode:200,
-                        message:"user does not exist",
-                        data:data
-                    });
-                } 
+				} else if (data === null) {
+					reply({
+						statusCode: 200,
+						message: "user does not exist",
+						data: data
+					});
+				}
 				else {
 					reply({
 						statusCode: 201,
@@ -749,43 +769,43 @@ const routes =[
 	{
 		method: 'POST',
 		path: '/post/talents/ofuser',
-		config:{
+		config: {
 			//include this api in swagger documentation
 			tags: ['api'],
 			description: 'delete a user',
 			notes: 'delete a user',
 		},
-		handler: function(request, reply){
+		handler: function (request, reply) {
 			var Talent = new TalentModel({
-                  "fiction_writer": request.payload.fiction_writer,
-				  "singer": request.payload.singer,
-				  "social_media_influencer": request.payload.social_media_influencer,
-				  "actor": request.payload.actor,
-				  "cinematographer": request.payload.cinematographer,
-				  "non_fiction_writer": request.payload.non_fiction_writer,
-				  "song_writer": request.payload.song_writer,
-				  "voice_actor": request.payload.voice_actor,
-				  "user_id": request.payload.user_id
-           });
-			Talent.save(function(err,data){
-               if (err){
-                   throw err;
-                   console.log(err);
-               } else{
-                   reply({
-                        statusCode: 200,
-                        message: 'talent created Successfully',
-                        data: data
-                    });
-               }
-           });
+				"fiction_writer": request.payload.fiction_writer,
+				"singer": request.payload.singer,
+				"social_media_influencer": request.payload.social_media_influencer,
+				"actor": request.payload.actor,
+				"cinematographer": request.payload.cinematographer,
+				"non_fiction_writer": request.payload.non_fiction_writer,
+				"song_writer": request.payload.song_writer,
+				"voice_actor": request.payload.voice_actor,
+				"user_id": request.payload.user_id
+			});
+			Talent.save(function (err, data) {
+				if (err) {
+					throw err;
+					console.log(err);
+				} else {
+					reply({
+						statusCode: 200,
+						message: 'talent created Successfully',
+						data: data
+					});
+				}
+			});
 		}
 
 	},
 	{
 		method: 'PUT',
 		path: '/updatee/talent_id/usermodle/{objectid}',
-		config:{
+		config: {
 			//Include this api in swagger documentation
 			tags: ['api'],
 			description: 'resend otp to user',
@@ -797,55 +817,55 @@ const routes =[
 				}
 			}
 		},
-		handler: (request, reply) =>{
+		handler: (request, reply) => {
 
-			UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {talent_id: request.payload.talent_id}},
-						{ new: true },function (err, data) {
-					  		if (err) {
-			    				reply({
-			    					statusCode: 503,
-			    					message: 'error was handled',
-			    					data: err
-			    				});
-			    			}
-			    			else{
-			    				reply({
-			    					statusCode: 200,
-			    					message: "we have updated the talent_id.",
-			    					data: data
-			    				});
-			    			}	
-					});
+			UserModel.findByIdAndUpdate({ "_id": request.params.objectid }, { $set: { talent_id: request.payload.talent_id } },
+				{ new: true }, function (err, data) {
+					if (err) {
+						reply({
+							statusCode: 503,
+							message: 'error was handled',
+							data: err
+						});
+					}
+					else {
+						reply({
+							statusCode: 200,
+							message: "we have updated the talent_id.",
+							data: data
+						});
+					}
+				});
 		}
 	},
 	{
 		method: 'DELETE',
 		path: '/delete/talent/{user_id}',
-		config:{
+		config: {
 			//include this api in swagger documentation
 			tags: ['api'],
 			description: 'delete a user',
 			notes: 'delete a user',
-			validate:{
-				params:{
+			validate: {
+				params: {
 					user_id: Joi.string()
 				}
 			}
 		},
-		handler: function(request, reply){
-			TalentModel.findOneAndRemove({'user_id': request.params.user_id}, function(err, data){
-				if (err){
+		handler: function (request, reply) {
+			TalentModel.findOneAndRemove({ 'user_id': request.params.user_id }, function (err, data) {
+				if (err) {
 					reply({
 						statusCode: 503,
 						message: err
 					})
-				} else if (data === null ){
-                    reply({
-                        statusCode:200,
-                        message:"user does not exist",
-                        data:data
-                    });
-                } 
+				} else if (data === null) {
+					reply({
+						statusCode: 200,
+						message: "user does not exist",
+						data: data
+					});
+				}
 				else {
 					reply({
 						statusCode: 201,
@@ -857,47 +877,47 @@ const routes =[
 	},
 	{
 
-	    method: 'POST',
-	    path: '/user/video/{objectid}',
-	    config: {
-	    	//Include this api in swagger documentation
+		method: 'POST',
+		path: '/user/video/{objectid}',
+		config: {
+			//Include this api in swagger documentation
 			tags: ['api'],
 			description: 'uploads video file by user',
 			notes: 'uploads video file by user',
 
-	        payload: {
-	            output: 'stream',
-	            parse: true,
-	            allow: 'multipart/form-data'
-	        },
+			payload: {
+				output: 'stream',
+				parse: true,
+				allow: 'multipart/form-data'
+			},
 
-	        handler: function (request, reply) {
-	            var data = request.payload;
-	            if (data.file) {
-	                data.file.hapi.filename = request.params.objectid;
-	                console.log(data.file.hapi.filename);
-	                var name = data.file.hapi.filename;
-	                var path = __dirname + "/video_files/" + name + '.mp4';
-	                var file = fs.createWriteStream(path);
+			handler: function (request, reply) {
+				var data = request.payload;
+				if (data.file) {
+					data.file.hapi.filename = request.params.objectid;
+					console.log(data.file.hapi.filename);
+					var name = data.file.hapi.filename;
+					var path = __dirname + "/video_files/" + name + '.mp4';
+					var file = fs.createWriteStream(path);
 
-	                file.on('error', function (err) { 
-	                    console.error(err)
-	                });
+					file.on('error', function (err) {
+						console.error(err)
+					});
 
-	                data.file.pipe(file);
+					data.file.pipe(file);
 
-	                data.file.on('end', function (err) { 
-	                    var ret = {
-	                        filename: data.file.hapi.filename,
-	                        headers: data.file.hapi.headers
-	                    }
-	                    reply(JSON.stringify(ret));
-	                })
-	            }
+					data.file.on('end', function (err) {
+						var ret = {
+							filename: data.file.hapi.filename,
+							headers: data.file.hapi.headers
+						}
+						reply(JSON.stringify(ret));
+					})
+				}
 
 
-	        }
-	    }
+			}
+		}
 	}
 ]
 

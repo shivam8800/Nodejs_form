@@ -5,44 +5,47 @@
   <title> {{title}} </title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
   <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
   <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+  <link rel="stylesheet" type="text/css" href="/global.css">
 </head>
 
 <body style="padding: 0px;">
 
   {{> navbar-client }}
+
   <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
     <div class="col-md-6">
       <div class="form-area">
         <form id="order_form" role="form">
           <br style="clear:both">
-          <h3 style="margin-bottom: 25px; text-align: center;">Detail Form</h3>
+          <h3> Birch is currently invite only </h3>
+          <h5> Please enter your details below to receive an invite </h5>
+          <div class="vspacer-25"></div>
+          
           <div class="form-group">
-            <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Write your project name" required>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Your name" required>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
-          </div>
-          <div class="form-group" style="margin-bottom: 8%;">
-            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-          </div>
-          <div class="form-group line">
-            <!-- country codes (ISO 3166) and Dial codes. -->
-            <select name="countryCode" style="width: 30%; margin-right: 1%;" class="form-control" id="countryCode">
-
-            </select>
-            <input type="number" style="width: 70%;" class="form-control" id="phonnumber" name="phone_number" placeholder="Contact number"
-              required>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Business email" required>
           </div>
 
-          <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Next </button>
+          {{> contact-info }}
+          
+
+          <div class="form-group linkedin-group">
+            <input type="url" class="form-control" id="linkedin" name="linkedin" placeholder="LinkedIn profile">
+            <small> Users with verified profiles get approved faster </small>
+          </div>
+
+          <!-- Actions -->
+          <button type="button" data-form-state="signup" id="toggle-action" class="btn btn-link"> Have an account? </button>
+          <button type="button" id="submit" name="submit" class="btn btn-primary float-right"> Submit </button>
         </form>
-        <button id="orders" class="btn btn-primary float-left">All Orders</button>
+        <!-- <button id="orders" class="btn btn-primary float-left">All Orders</button> -->
       </div>
     </div>
   </div>
@@ -73,7 +76,7 @@
   </div>
 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="http://127.0.0.1:8080/app.js"></script>
+  <script type="text/javascript" src="/index.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>

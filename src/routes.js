@@ -2,10 +2,12 @@ const db = require('../database').db;
 var FormModel = require('../models/form');
 var UserModel = require('../models/user');
 var TalentModel = require('../models/talent');
+var VendorTask = require('../models/vendor_tasks');
 var Mailer = require('./mailer');
 const Joi = require('joi');
 var async = require("async");
 import jwt from 'jsonwebtoken';
+require('./handlebar-helpers')
 
 import fs from 'fs'
 var path = require('path');
@@ -13,6 +15,8 @@ var ObjectId = require('mongoose').ObjectID;
 
 const rp = require('request-promise');
 const cheerio = require('cheerio');
+
+const ADMIN_EMAILS = ["vineet@birchapp.io"]
 
 var request1 = require('request');
 // import jwt from 'jsonwebtoken';
@@ -29,7 +33,8 @@ const routes = [
 		method: 'GET',
 		path: '/signup',
 		handler: (request, h) => {
-			return h.view("vendor-signup");
+			// h.state('signature','test')
+			return h.view("vendor-signup", { title: "Sign up as a creator | Birch" }, { layout: 'vendor_layout' });
 		}
 	},
 
@@ -397,26 +402,19 @@ const routes = [
 	},
 	{
 		method: 'GET',
-		path: '/get/allcities',
-		config: {
-			tags: ['api'],
-			description: 'get list of all cities of whole world',
-			notes: 'get list of all cities of whole world'
-		},
-		handler: (request, reply) => {
+		path: '/api/allcities',
+		handler: (request, h) => {
 			var file = path.join(__dirname + '/cities.txt');
 			var array = fs.readFileSync(file).toString().split("\n");
-			reply(array);
+			return h.response({
+				statusCode:201,
+				message:array
+			});
 		}
 	},
 	{
 		method: 'POST',
 		path: '/api/vendor/signup',
-		config: {
-			tags: ['api'],
-			description: 'create a new user',
-			notes: 'create a new user',
-		},
 		handler: (request, reply) => {
 			var otp = Math.floor(Math.random() * 90000) + 10000;
 
@@ -462,7 +460,7 @@ const routes = [
 
 			let otp = Math.floor(Math.random() * 90000) + 10000;
 
-			let user = await UserModel.findOneAndUpdate({ email: request.params.email }, { $set: { otp: otp } })
+			let user = await UserModel.findOneAndUpdate({ email: request.params.email }, { $set: { otp: otp,otp_issued_for:request.info.remoteAddress}})
 			let mail_status;
 
 			console.log(user)
@@ -485,6 +483,36 @@ const routes = [
 
 		}
 
+	},
+	{
+		method: "POST",
+		path: "/api/vendor/update",
+		config: {
+			auth: "accesstoken"
+		},
+		handler: async (request, h) => {
+
+			// Find the user based on cookie update specific fields provided in payload field
+			let error
+			let updated_vendor = await UserModel.findByIdAndUpdate(request.auth.credentials._id, { $set: request.payload }, { new: true }).catch(err => { error = err })
+
+			// Send back response
+			if (error) {
+				return h.response({
+					statusCode: 503,
+					message: error
+				})
+			} else {
+				// Remember to delete otp from vendor obejct
+				delete updated_vendor.otp
+				return h.response({
+					statusCode: 201,
+					message: updated_vendor
+				})
+			}
+
+
+		}
 	},
 	{
 		method: 'PUT',
@@ -515,7 +543,6 @@ const routes = [
 			};
 
 			mailgun.messages().send(data1, function (error, body) {
-<<<<<<< HEAD
 				if (!error) {
 					UserModel.findByIdAndUpdate({ "_id": request.params.objectid }, { $set: { otp: otp } },
 						{ new: true }, function (err, data) {
@@ -534,85 +561,12 @@ const routes = [
 								});
 							}
 						});
-=======
-				console.log(data1);
-			  if (!error){
-				  	UserModel.findByIdAndUpdate({"_id":request.params.objectid},{ $set: {otp: otp}},
-						{ new: true },function (err, data) {
-					  		if (err) {
-			    				reply({
-			    					statusCode: 503,
-			    					message: 'error was handled',
-			    					data: err
-			    				});
-			    			}
-			    			else{
-			    				reply({
-			    					statusCode: 200,
-			    					message: "we have resend otp.",
-			    					data: data
-			    				});
-			    			}	
-					});
->>>>>>> 4285e5af2dd6b138231fc936dd9cea21b4a8c7af
 
 				} else {
 					console.log(error);
 					throw error
 				}
 			});
-		}
-	},
-	{
-		method: 'PUT',
-		path: '/update/user/vitalinfo/{objectid}',
-		config: {
-			//Include this api in swagger documentation
-			tags: ['api'],
-			description: 'setting information of vital info',
-			notes: 'setting information of vital info',
-			//we use joi plugin to validate the request
-			validate: {
-				params: {
-					objectid: Joi.string().required()
-				}
-			}
-		},
-		handler: (request, reply) => {
-			const mainData = JSON.parse(request.payload.formModel);
-
-			UserModel.findByIdAndUpdate(
-				{ "_id": request.params.objectid },
-				{
-					$set:
-						{
-							city: mainData.city[0],
-							languages: mainData.languages,
-							fee: mainData.fee
-						}
-				},
-				{ new: true }, function (err, data) {
-					if (err) {
-						reply({
-							statusCode: 503,
-							message: 'no metch found',
-							data: err
-						});
-					} else if (data === null) {
-						reply({
-							statusCode: 200,
-							message: "user does not exist",
-							data: data
-						});
-					}
-					else {
-						reply({
-							statusCode: 200,
-							message: "you have successfully updated your details.",
-							data: data
-						});
-					}
-				});
 		}
 	},
 	{
@@ -633,7 +587,8 @@ const routes = [
 		handler: async (request, h) => {
 
 
-			let user = await UserModel.findOne({ email: request.payload.email, otp: request.payload.otp })
+			// The OTP can only be issued on the IP address it was issued for
+			let user = await UserModel.findOne({ email: request.payload.email, otp: request.payload.otp, otp_issued_for:request.info.remoteAddress })
 
 			if (!user) {
 				return h.response({
@@ -644,12 +599,16 @@ const routes = [
 
 				let response_payload = user.toJSON()
 				delete response_payload.otp
+
+				// Add the requesting IP to signature
+				response_payload.ip = request.info.remoteAddress
+
 				let token = jwt.sign(response_payload, global.PRIVATE_KEY);
 
-				return h.response({
-					statusCode: 201,
-					message: response_payload
-				}).state('signature', token || "")
+				// We cant set cookie here since the client might make XHR request
+				// So we redicrect to another route where cookie is set and user is further sent to the right destination
+				h.state('signature', token)
+				return h.redirect(`/onbaording/talents/${response_payload._id}`)
 
 			}
 
@@ -676,6 +635,142 @@ const routes = [
 	},
 	{
 		method: 'GET',
+		path: '/admin/talents',
+		options: {
+			auth: 'accesstoken'
+		},
+		handler: async (request, h) => {
+
+			
+
+			if(! ADMIN_EMAILS.includes(request.auth.credentials.email)){
+				return h.response({
+					statusCode: 403,
+					message: "Hold it! You are not allowed here."
+				})
+			}
+
+			let error
+
+			let talents = await TalentModel.find({}).catch(err => { error = err })
+
+			if (error) {
+				return h.response({
+					statusCode: 503,
+					message: error
+				})
+			} else
+				return h.view('admin_talents', { talents: talents.map(t => t.toJSON()) }, { layout: 'vendor_layout' })
+
+		}
+	},
+	{
+		method: 'POST',
+		path: '/admin/talents',
+		options: {
+			auth: 'accesstoken'
+		},
+		handler: async (request, h) => {
+
+			if(! ADMIN_EMAILS.includes(request.auth.credentials.email)){
+				return h.response({
+					statusCode: 403,
+					message: "Hold it! You are not allowed here."
+				})
+			}
+
+			let error
+
+			await TalentModel.create({ talent_name: request.payload.talent_name }).catch(err => { error = err })
+			let talents = await TalentModel.find({}).catch(err => { error = err })
+
+			if (error) {
+				return h.response({
+					statusCode: 503,
+					message: error
+				})
+			} else
+				return h.view('admin_talents', { talents: talents.map(t => t.toJSON()) }, { layout: 'vendor_layout' })
+
+		}
+	},
+	{
+		method: 'GET',
+		path: '/admin/tasks',
+		options: {
+			auth: 'accesstoken'
+		},
+		handler: async (request, h) => {
+
+		
+			if(! ADMIN_EMAILS.includes(request.auth.credentials.email)){
+				return h.response({
+					statusCode: 403,
+					message: "Hold it! You are not allowed here."
+				})
+			}
+
+			let error
+
+			let tasks = await VendorTask.find({}).populate('talent').catch(err => { error = err })
+
+			if (error) {
+				return h.response({
+					statusCode: 503,
+					message: error
+				})
+			} 
+
+			let talents = await TalentModel.find({}).catch(err => { error = err })
+
+			if (error) {
+				return h.response({
+					statusCode: 503,
+					message: error
+				})
+			} 
+
+			return h.view('admin_tasks', { tasks: tasks.map(t => t.toJSON()),talents: talents.map(t => t.toJSON()) }, { layout: 'vendor_layout' })
+			
+				
+
+		}
+	},
+	{
+		method: 'POST',
+		path: '/admin/tasks',
+		options: {
+			auth: 'accesstoken'
+		},
+		handler: async (request, h) => {
+
+			if(! ADMIN_EMAILS.includes(request.auth.credentials.email)){
+				return h.response({
+					statusCode: 403,
+					message: "Hold it! You are not allowed here."
+				})
+			}
+
+			let error
+
+			await VendorTask.create(request.payload).catch(err => { error = err })
+			let tasks = await VendorTask.find({}).catch(err => { error = err })
+
+			if (error) {
+				return h.response({
+					statusCode: 503,
+					message: error
+				})
+			} else
+				 return h.response({
+					statusCode: 201,
+					message: tasks
+				})
+
+		}
+	},
+	{
+		method: 'GET',
 		path: '/talent/{objectid}',
 		handler: (request, reply) => {
 			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
@@ -694,61 +789,34 @@ const routes = [
 	},
 	{
 		method: 'GET',
-		path: '/info/{objectid}',
-		handler: (request, reply) => {
-			FormModel.findOne({ '_id': ObjectId(request.params.objectid) }, function (err, data) {
-				if (err) {
-					reply({
-						statusCode: 503,
-						message: 'no metch found',
-						data: err
-					});
-				}
-				else {
-					reply.file("vendor_pages/info.html");
-				}
-			});
+		path: '/onbaording/talents',
+		options: {
+			auth: 'accesstoken'
+		},
+		handler: async (request, h) => {
+
+			let error
+
+			// Fetch the master talent set 
+			let talents = await TalentModel.find({}).catch(err => { error = err })
+
+			if (error) {
+				h.response({
+					statusCode: 503,
+					message: error
+				});
+			} else
+				return h.view('vendor_onboarding_1', { title: 'Complete your profile on Birch', talents: talents.map(t => t.toJSON()) }, { layout: 'vendor_layout' })
 		}
 	},
 	{
-		path: '/get/userdetail/{email}',
+		path: '/onboarding/vitalinfo',
 		method: 'GET',
 		config: {
-			//include this route in swagger documentation
-			tags: ['api'],
-			description: "get user detail",
-			notes: "get user detail",
-			validate: {
-				//jobtitile is required field
-				params: {
-					email: Joi.string().required()
-				}
-			}
+			auth:"accesstoken"
 		},
-		handler: (request, reply) => {
-			UserModel.find({ "email": request.params.email }, function (err, data) {
-				if (err) {
-					reply({
-						statusCode: 503,
-						message: "Failed to get data",
-						data: err
-					});
-				}
-				else if (data.length === 0) {
-					reply({
-						statusCode: 200,
-						message: "user does not exist",
-						data: data
-					});
-				}
-				else {
-					reply({
-						statusCode: 200,
-						message: "user detail Successfully Fetched",
-						data: data
-					});
-				}
-			});
+		handler: (request, h) => {
+			return h.view('vendor_onboarding_2', { title: 'Complete your profile on Birch'}, { layout: 'vendor_layout' })
 		}
 	},
 	{

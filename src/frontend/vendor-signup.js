@@ -1,12 +1,6 @@
 $(document).ready(function () {
 
 
-
-
-    $('#login').click(function (e) {
-        window.location = 'http://127.0.0.1:8080/login';
-    });
-
     $("#signup_form").validate();
 
     $('#submit').click(function (e) {
@@ -125,30 +119,7 @@ $(document).ready(function () {
 
         } else {
             // Ask him to enter an OTP and login
-            $.ajax({
-                url: `/api/vendor/auth`,
-                type: "POST",
-                data: { email: email, otp: otp },
-                success: function (response) {
-
-                    $('body').loading('stop')
-                    if (response.statusCode == 503) {
-                        swal("Sorry about this", "There was a problem sending OTP to your email. Contact vineet@birchapp.io", "error");
-                    }
-
-
-                    if(response.message){
-                        swal("Done!", "You will be redirected to next screen","success");
-                    }else
-                        swal("Can't let you in", "May be you punched in wrong OTP. Care to try again?","error");
-
-
-                },
-                error: function (err) {
-                    $('body').loading('stop')
-                    alert(err);
-                }
-            });
+            submit_form(`/api/vendor/auth`,{ email: email, otp: otp })
         }
 
 

@@ -1,0 +1,37 @@
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh; max-width: 800vh;">
+
+    <div class="form-area">
+
+        <form id="talent_form" role="form">
+
+            <div class="vspacer-25"></div>
+            <h3> See a list of available talents here </h3>
+            <h5> This section is only accessible to admins </h5>
+            <div class="vspacer-25"></div>
+
+            <div class="row">
+
+                <ul>
+                    {{#each talents}}
+                    <li>{{this.talent_name}}</li>
+                    {{/each}}
+                </ul>
+
+            </div>
+
+            <div class="vspacer-25"></div>
+
+            <h3> Create a new talent </h3>
+
+            <div class="row">
+
+                <input type="text" id="new_talent_name" class="form-control" />
+                <button type="button" onclick="submit_form('/admin/talents',{talent_name:$('#new_talent_name').val()});" class="btn btn-primary">
+                Add new talent </button>
+
+            </div>
+        </form>
+
+    </div>
+
+</div>

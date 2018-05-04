@@ -1,0 +1,60 @@
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh; max-width: 800vh;">
+
+    <div class="form-area">
+
+        <form id="vendor_task" role="form">
+
+            <div class="vspacer-25"></div>
+            <h3> See a list of available tasks for each category </h3>
+            <h5> This section is only accessible to admins </h5>
+            <div class="vspacer-25"></div>
+
+            <div class="row">
+
+                <ul>
+                    {{#each tasks}}
+                    <li> {{this.name}} for {{this.talent.talent_name}}</li>
+                    {{/each}}
+                </ul>
+
+            </div>
+
+            <div class="vspacer-25"></div>
+
+            <h3> Create a new task </h3>
+
+            <div class="form-group">
+
+                <input type="text" id="name" name="name" class="form-control" required/>
+
+            </div>
+
+            <div class="form-group">
+
+                <textarea id="summernote" name="description"></textarea>
+
+            </div>
+
+            <div class="form-group">
+                <select class="custom-select" name='talent' required>
+                    <option disabled selected value> -- Talent -- </option>
+                    {{#each talents}}
+                    <option value="{{this._id}}">{{this.talent_name}}</option>
+                    {{/each}}
+
+                </select>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary"> Add new task </button>
+        </form>
+
+    </div>
+
+</div>
+
+<!-- include summernote css/js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote-bs4.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.10/summernote-bs4.min.js"></script>
+
+<script type="text/javascript" src="/admin_tasks.js"></script>

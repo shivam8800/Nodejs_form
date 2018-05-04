@@ -1,0 +1,59 @@
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
+    <div class="col-md-6">
+        <div class="form-area">
+            <form id="info_form" role="form">
+                <br style="clear:both">
+                <h3 style="margin-bottom: 25px; text-align: center;"> You are almost there! </h3>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" autocomplete="off" id="city" name="city" placeholder="Your city of residence " required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="languages" name="languages" placeholder="What languages do you know?" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="number" class="form-control" id="fee" name="fee" placeholder="Your fee" aria-label="Your fee" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text">/hr</span>
+                    </div>
+                    <small class="form-text text-muted">
+                        This fee is only indicative and helps us understand if you are right fit for a project.
+                    </small>
+                </div>
+
+
+                <div class="form-group">
+                    <select class="custom-select" name='gender' required>
+                        <option disabled selected value> -- Gender -- </option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    
+
+                </div>
+
+                <!-- Birth date -->
+                <div class="form-group">
+                    <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="Date of birth" aria-label="Date of birth"
+                        required>
+                    <small class="form-text text-muted">
+                        Date of birth
+                    </small>
+                </div>
+
+                <button type="submit" id="submit-button" name="submit-button" class="btn btn-primary float-right"> Go to my profile </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/magicsuggest.js"></script>
+<link href="/magicsuggest.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApWmuR7Mx4nNz7oZL_MMBawgmiPHWqhLA&libraries=places"></script>
+<script type="text/javascript" src="/vendor_onboarding_2.js"></script>
+

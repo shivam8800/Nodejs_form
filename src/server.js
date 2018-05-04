@@ -10,13 +10,15 @@ const PORT = process.env.PORT;
 global.PRIVATE_KEY = 'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy';
 
 const server = Hapi.server({
-	host: 'localhost',
+	host: '0.0.0.0',
 	port: 8080 || PORT,
 	routes: {
 		files: {
 			relativeTo: Path.join(__dirname, 'frontend')
 		}
 	}
+
+
 });
 
 
@@ -44,16 +46,54 @@ const init_server = async () => {
 		},
 		relativeTo: __dirname,
 		path: 'templates',
-		partialsPath: "partials"
+		partialsPath: "partials",
+		layoutPath: 'layouts'
+	});
+
+	// Set up a strategy to authenticate requests. We are settings tokens in user's cookie and using that data 
+	// to allow access to restricted routes
+	server.auth.strategy('accesstoken', 'bearer-access-token', {
+
+		allowCookieToken: true,
+		allowQueryToken: true,
+		accessTokenName: 'signature',
+		validate: async (request, token, h) => {
+
+			let isValid;
+			let credentials;
+
+
+			// here is where you validate your token
+			// comparing with token from your database for example
+
+			// verify a token symmetric
+			try {
+				credentials = jwt.verify(token, global.PRIVATE_KEY);
+				// Also check that request is being made from the same ip as earlier
+				if (credentials.ip && (credentials.ip == request.info.remoteAddress))
+					isValid = true;
+				else{
+					isValid=false
+					credentials={}
+				}
+					
+			} catch (err) {
+				isValid = false;
+				credentials = {}
+			}
+
+			return { isValid, credentials };
+		}
+
 	});
 
 	server.state('signature', {
-		ttl: null,
-		isSecure: true,
+		ttl: 3 * 24 * 60 * 60 * 1000,
 		isHttpOnly: true,
-		encoding: 'base64json',
-		clearInvalid: false, // remove invalid cookies
-		strictHeader: true // don't allow violations of RFC 6265
+		encoding: 'base64',
+		isSecure: process.env.NODE_ENV == 'production',
+		path: '/',
+		strictHeader: true
 	});
 
 	server.route(routes);
@@ -72,34 +112,7 @@ const init_server = async () => {
 
 
 
-	server.auth.strategy('simple', 'bearer-access-token', {
 
-		allowCookieToken: true,
-		validate: async (request, token, h) => {
-
-			// here is where you validate your token
-			// comparing with token from your database for example
-
-			// verify a token symmetric
-			jwt.verify(token, global.PRIVATE_KEY, function (err, decoded) {
-				if(err){
-					const isValid=false
-					const credentials = null;
-				}
-					
-				else{
-					const isValid=true
-					const credentials = decoded;
-				}
-					
-			});
-	
-			// const artifacts = { test: 'info' };
-
-			return { isValid, credentials };
-		}
-
-	});
 
 
 

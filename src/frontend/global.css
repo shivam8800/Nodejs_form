@@ -21,6 +21,11 @@ h5 {
     color: gray;
 }
 
+ul {
+    list-style-type: none;
+}
+  
+
 small {
     color: gray;
     font-size: 0.65em;

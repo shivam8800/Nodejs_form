@@ -6,15 +6,9 @@ var UserModel = require('./user');
 var Schema = mongoose.Schema;
 
 var TalentSchema = new Schema({
-  fiction_writer: Boolean,
-  singer: Boolean,
-  social_media_influencer: Boolean,
-  actor: Boolean,
-  cinematographer: Boolean,
-  non_fiction_writer: Boolean,
-  song_writer: Boolean,
-  voice_actor: Boolean,
-  user_id: [{ type: Schema.Types.ObjectId, ref: UserModel }]
+  talent_name:{type:String,required:true,unique:true},
+  description:{type:String},
+  deleted:{type:Boolean,default:false}
 });
 
 const Talent = mongoose.model('Talent', TalentSchema)
